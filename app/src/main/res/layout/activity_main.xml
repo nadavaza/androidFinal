@@ -12,9 +12,21 @@
         android:background="?attr/colorPrimary"
         android:title="AniRate"
         android:titleTextColor="@android:color/white"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Fragment Container (For switching fragments) -->
+        <!-- Profile Picture (Top Right Corner) -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Fragment Container -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -29,5 +41,5 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
         app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

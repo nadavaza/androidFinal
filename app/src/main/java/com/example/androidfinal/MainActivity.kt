@@ -16,6 +16,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // Set up Profile Image Click Listener
+        val profileImage = findViewById<ImageView>(R.id.profileImage)
+        profileImage.setOnClickListener {
+            loadFragment(UserDetailsFragment())
+        }
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         // Load HomeFragment by default
