@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 class AddPostFragment : Fragment() {
 
@@ -42,11 +43,8 @@ class AddPostFragment : Fragment() {
                     review = review
                 )
 
-                // Pass the new post to HomeFragment
-                (parentFragmentManager.findFragmentById(R.id.fragment_container) as? HomeFragment)?.addPost(newPost)
-
-                // Go back to HomeFragment
-                parentFragmentManager.popBackStack()
+                // Navigate back to HomeFragment
+                findNavController().navigate(R.id.action_addPost_to_home)
             }
         }
     }

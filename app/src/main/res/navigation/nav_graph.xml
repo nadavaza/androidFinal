@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/welcomeFragment">
+
+    <!-- Welcome Screen -->
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.androidfinal.WelcomeFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcome_to_signIn"
+            app:destination="@id/signInFragment"/>
+        <action
+            android:id="@+id/action_welcome_to_signUp"
+            app:destination="@id/signUpFragment"/>
+    </fragment>
+
+    <!-- Sign In Screen -->
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.androidfinal.SignInFragment"
+        android:label="Sign In"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signIn_to_home"
+            app:destination="@id/homeFragment"/>
+    </fragment>
+
+    <!-- Sign Up Screen -->
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.androidfinal.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signUp_to_home"
+            app:destination="@id/homeFragment"/>
+    </fragment>
+
+    <!-- Home Screen -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.androidfinal.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_addPost"
+            app:destination="@id/addPostFragment"/>
+        <action
+            android:id="@+id/action_home_to_trending"
+            app:destination="@id/trendingFragment"/>
+    </fragment>
+
+    <!-- Trending Screen -->
+    <fragment
+        android:id="@+id/trendingFragment"
+        android:name="com.example.androidfinal.TrendingFragment"
+        android:label="Trending"
+        tools:layout="@layout/fragment_trending"/>
+
+    <!-- Add Post Screen -->
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.androidfinal.AddPostFragment"
+        android:label="Add Post"
+        tools:layout="@layout/fragment_add_post">
+        <action
+            android:id="@+id/action_addPost_to_home"
+            app:destination="@id/homeFragment"/>
+    </fragment>
+
+    <!-- User Details Screen -->
+    <fragment
+        android:id="@+id/userDetailsFragment"
+        android:name="com.example.androidfinal.UserDetailsFragment"
+        android:label="User Details"
+        tools:layout="@layout/fragment_user_details"/>
+</navigation>
