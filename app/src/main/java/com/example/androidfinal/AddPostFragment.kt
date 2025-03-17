@@ -10,6 +10,7 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.androidfinal.models.Post
 
 class AddPostFragment : Fragment() {
 

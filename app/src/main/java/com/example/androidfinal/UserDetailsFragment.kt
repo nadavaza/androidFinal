@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
+import com.example.androidfinal.models.Post
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {

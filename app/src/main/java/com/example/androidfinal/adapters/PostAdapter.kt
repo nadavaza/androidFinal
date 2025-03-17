@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.androidfinal.Post
 import com.example.androidfinal.R
+import com.example.androidfinal.models.Post
 
 class PostAdapter(
     private val posts: List<Post>,
