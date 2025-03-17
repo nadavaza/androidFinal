@@ -2,7 +2,6 @@ package com.example.androidfinal
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,6 +13,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
@@ -21,8 +22,11 @@ class UserDetailsFragment : Fragment() {
     private lateinit var userProfileImage: ImageView
     private lateinit var editUserName: EditText
     private lateinit var buttonSave: Button
+    private lateinit var recyclerViewUserPosts: RecyclerView
+    private lateinit var postAdapter: PostAdapter
 
     private var selectedImageUri: Uri? = null
+    private val userPosts = mutableListOf<Post>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +42,7 @@ class UserDetailsFragment : Fragment() {
         userProfileImage = view.findViewById(R.id.userProfileImage)
         editUserName = view.findViewById(R.id.editUserName)
         buttonSave = view.findViewById(R.id.buttonSave)
+        recyclerViewUserPosts = view.findViewById(R.id.recyclerViewUserPosts)
 
         // Load existing user data (mock data for now)
         editUserName.setText("John Doe")
@@ -56,6 +61,27 @@ class UserDetailsFragment : Fragment() {
         buttonBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        // Initialize RecyclerView
+        recyclerViewUserPosts.layoutManager = LinearLayoutManager(requireContext())
+
+        // Load mock user posts
+        loadUserPosts()
+    }
+
+    private fun loadUserPosts() {
+        // Mock data: User's posts
+        userPosts.addAll(
+            listOf(
+                Post("1", "John Doe", "Attack on Titan - Episode 12", 9, "Awesome episode!"),
+                Post("2", "John Doe", "One Piece - Episode 1056", 8, "Great animation!"),
+                Post("3", "John Doe", "Naruto Shippuden - Episode 500", 10, "Emotional ending.")
+            )
+        )
+
+        // Set up adapter
+        postAdapter = PostAdapter(userPosts)
+        recyclerViewUserPosts.adapter = postAdapter
     }
 
     private fun openGallery() {
