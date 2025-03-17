@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ class SignUpFragment : Fragment() {
         val editEmail = view.findViewById<EditText>(R.id.editEmail)
         val editPassword = view.findViewById<EditText>(R.id.editPassword)
         val buttonSignUp = view.findViewById<Button>(R.id.buttonSignUp)
+        val textHaveAccount = view.findViewById<TextView>(R.id.textHaveAccount) // <-- Added reference
 
         buttonSignUp.setOnClickListener {
             val email = editEmail.text.toString().trim()
@@ -35,6 +37,11 @@ class SignUpFragment : Fragment() {
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Navigate to Sign In screen when clicking "Already have an account? Sign In"
+        textHaveAccount.setOnClickListener {
+            findNavController().navigate(R.id.action_signUp_to_signIn)
         }
     }
 }
