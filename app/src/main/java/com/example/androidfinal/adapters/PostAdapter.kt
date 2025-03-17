@@ -1,25 +1,38 @@
-package com.example.androidfinal
+package com.example.androidfinal.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidfinal.Post
+import com.example.androidfinal.R
 
-class PostAdapter(private val posts: List<Post>) :
-    RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+class PostAdapter(
+    private val posts: List<Post>,
+    private val onEditClick: (Post) -> Unit
+) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val textViewUsername: TextView = view.findViewById(R.id.textViewUsername)
         private val textViewEpisodeTitle: TextView = view.findViewById(R.id.textViewEpisodeTitle)
         private val textViewReview: TextView = view.findViewById(R.id.textViewReview)
         private val textViewRating: TextView = view.findViewById(R.id.textViewRating)
+        private val buttonEditPost: Button = view.findViewById(R.id.buttonEditPost)
 
-        fun bind(post: Post) {
+        fun bind(post: Post, onEditClick: (Post) -> Unit) {
             textViewUsername.text = post.username
             textViewEpisodeTitle.text = post.episodeTitle
             textViewReview.text = post.review
             textViewRating.text = "⭐ ${post.rating}/10"
+
+            // Show edit button only for the logged-in user (e.g., "John Doe")
+            buttonEditPost.visibility = if (post.username == "John Doe") View.VISIBLE else View.GONE
+
+            buttonEditPost.setOnClickListener {
+                onEditClick(post)
+            }
         }
     }
 
@@ -30,7 +43,7 @@ class PostAdapter(private val posts: List<Post>) :
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position])
+        holder.bind(posts[position], onEditClick)
     }
 
     override fun getItemCount() = posts.size

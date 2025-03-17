@@ -6,11 +6,10 @@
     app:cardCornerRadius="8dp"
     android:layout_margin="8dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/textViewUsername"
@@ -18,7 +17,9 @@
             android:layout_height="wrap_content"
             android:text="User Name"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/textViewEpisodeTitle"
@@ -26,14 +27,18 @@
             android:layout_height="wrap_content"
             android:text="Episode Title"
             android:textSize="14sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewUsername"/>
 
         <TextView
             android:id="@+id/textViewReview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Review text"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewEpisodeTitle"/>
 
         <TextView
             android:id="@+id/textViewRating"
@@ -41,7 +46,20 @@
             android:layout_height="wrap_content"
             android:text="⭐ Rating"
             android:textSize="14sp"
-            android:textColor="@android:color/holo_orange_dark" />
+            android:textColor="@android:color/holo_orange_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewReview"/>
 
-    </LinearLayout>
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/buttonEditPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="8dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

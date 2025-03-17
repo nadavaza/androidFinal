@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidfinal.adapters.PostAdapter
 
 class HomeFragment : Fragment() {
 
@@ -31,7 +32,7 @@ class HomeFragment : Fragment() {
 
         // Set up RecyclerView
         recyclerView = view.findViewById(R.id.recyclerView)
-        postAdapter = PostAdapter(posts)
+        postAdapter = PostAdapter(posts) { post -> } // No edit functionality in HomeFragment
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = postAdapter
     }
