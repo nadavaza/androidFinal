@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_signIn_to_home"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/nav_feed"/>
     </fragment>
 
     <!-- Sign Up Screen -->
@@ -37,40 +37,29 @@
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUp_to_home"
-            app:destination="@id/homeFragment"/>
+            app:destination="@id/nav_feed"/>
     </fragment>
 
-    <!-- Home Screen -->
+    <!-- Home Screen (Feed) -->
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/nav_feed"
         android:name="com.example.androidfinal.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_home_to_addPost"
-            app:destination="@id/addPostFragment"/>
-        <action
-            android:id="@+id/action_home_to_trending"
-            app:destination="@id/trendingFragment"/>
-    </fragment>
-
-    <!-- Trending Screen -->
-    <fragment
-        android:id="@+id/trendingFragment"
-        android:name="com.example.androidfinal.TrendingFragment"
-        android:label="Trending"
-        tools:layout="@layout/fragment_trending"/>
+        tools:layout="@layout/fragment_home"/>
 
     <!-- Add Post Screen -->
     <fragment
-        android:id="@+id/addPostFragment"
+        android:id="@+id/nav_add"
         android:name="com.example.androidfinal.AddPostFragment"
         android:label="Add Post"
-        tools:layout="@layout/fragment_add_post">
-        <action
-            android:id="@+id/action_addPost_to_home"
-            app:destination="@id/homeFragment"/>
-    </fragment>
+        tools:layout="@layout/fragment_add_post"/>
+
+    <!-- Trending Screen -->
+    <fragment
+        android:id="@+id/nav_trending"
+        android:name="com.example.androidfinal.TrendingFragment"
+        android:label="Trending"
+        tools:layout="@layout/fragment_trending"/>
 
     <!-- User Details Screen -->
     <fragment

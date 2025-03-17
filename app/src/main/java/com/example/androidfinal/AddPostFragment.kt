@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 
@@ -43,8 +44,12 @@ class AddPostFragment : Fragment() {
                     review = review
                 )
 
-                // Navigate back to HomeFragment
-                findNavController().navigate(R.id.action_addPost_to_home)
+                Toast.makeText(requireContext(), "Post added!", Toast.LENGTH_SHORT).show()
+
+                // Navigate back to Home (Feed)
+                findNavController().navigate(R.id.nav_feed)
+            } else {
+                Toast.makeText(requireContext(), "Please fill all fields!", Toast.LENGTH_SHORT).show()
             }
         }
     }
