@@ -10,6 +10,7 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidfinal.adapters.PostAdapter
 
 class TrendingFragment : Fragment() {
 
@@ -69,7 +70,7 @@ class TrendingFragment : Fragment() {
         filteredPosts = allPosts.sortedByDescending { it.rating }.toMutableList()
 
         // Refresh RecyclerView with the filtered list
-        postAdapter = PostAdapter(filteredPosts)
+        postAdapter = PostAdapter(filteredPosts) { } // Pass empty lambda for onEditClick
         recyclerView.adapter = postAdapter
     }
 }
