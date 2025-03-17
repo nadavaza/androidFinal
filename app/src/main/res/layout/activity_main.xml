@@ -14,7 +14,23 @@
         android:titleTextColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- Profile Picture (Top Right Corner) -->
+    <!-- Sign Out Button (Left of Profile Picture) -->
+    <Button
+        android:id="@+id/buttonSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Sign Out"
+        android:textSize="14sp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="6dp"
+        android:textColor="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toStartOf="@id/profileImage"
+        app:layout_constraintTop_toTopOf="@id/toolbar"/>
+
+    <!-- Profile Picture -->
     <ImageView
         android:id="@+id/profileImage"
         android:layout_width="40dp"
@@ -29,7 +45,7 @@
         android:clickable="true"
         android:focusable="true"/>
 
-    <!-- Navigation Host Fragment (THIS IS THE IMPORTANT PART) -->
+    <!-- Navigation Host Fragment -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
