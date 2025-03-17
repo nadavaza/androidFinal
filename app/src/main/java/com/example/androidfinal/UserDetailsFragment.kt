@@ -1,6 +1,7 @@
 package com.example.androidfinal
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,13 +9,11 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidfinal.adapters.PostAdapter
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
@@ -24,7 +23,6 @@ class UserDetailsFragment : Fragment() {
     private lateinit var buttonSave: Button
     private lateinit var recyclerViewUserPosts: RecyclerView
     private lateinit var postAdapter: PostAdapter
-
     private var selectedImageUri: Uri? = null
     private val userPosts = mutableListOf<Post>()
 
@@ -44,7 +42,6 @@ class UserDetailsFragment : Fragment() {
         buttonSave = view.findViewById(R.id.buttonSave)
         recyclerViewUserPosts = view.findViewById(R.id.recyclerViewUserPosts)
 
-        // Load existing user data (mock data for now)
         editUserName.setText("John Doe")
 
         // Click listener to change profile picture
@@ -52,7 +49,7 @@ class UserDetailsFragment : Fragment() {
             openGallery()
         }
 
-        // Click listener to save changes
+        // Click listener to save user details
         buttonSave.setOnClickListener {
             saveUserDetails()
         }
@@ -65,23 +62,12 @@ class UserDetailsFragment : Fragment() {
         // Initialize RecyclerView
         recyclerViewUserPosts.layoutManager = LinearLayoutManager(requireContext())
 
-        // Load mock user posts
-        loadUserPosts()
-    }
-
-    private fun loadUserPosts() {
-        // Mock data: User's posts
-        userPosts.addAll(
-            listOf(
-                Post("1", "John Doe", "Attack on Titan - Episode 12", 9, "Awesome episode!"),
-                Post("2", "John Doe", "One Piece - Episode 1056", 8, "Great animation!"),
-                Post("3", "John Doe", "Naruto Shippuden - Episode 500", 10, "Emotional ending.")
-            )
-        )
-
-        // Set up adapter
-        postAdapter = PostAdapter(userPosts)
+        // Set adapter with edit callback
+        postAdapter = PostAdapter(userPosts) { post -> openEditPostDialog(post) }
         recyclerViewUserPosts.adapter = postAdapter
+
+        // Load user posts
+        loadUserPosts()
     }
 
     private fun openGallery() {
@@ -98,8 +84,45 @@ class UserDetailsFragment : Fragment() {
             return
         }
 
-        // Mock saving process
         Toast.makeText(requireContext(), "User details updated!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun loadUserPosts() {
+        userPosts.addAll(
+            listOf(
+                Post("1", "John Doe", "Attack on Titan - Episode 12", 9, "Awesome episode!"),
+                Post("2", "John Doe", "One Piece - Episode 1056", 8, "Great animation!"),
+                Post("3", "John Doe", "Naruto Shippuden - Episode 500", 10, "Emotional ending.")
+            )
+        )
+        postAdapter.notifyDataSetChanged()
+    }
+
+    private fun openEditPostDialog(post: Post) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_post, null)
+        val editEpisodeTitle = dialogView.findViewById<EditText>(R.id.editEpisodeTitle)
+        val editReview = dialogView.findViewById<EditText>(R.id.editReview)
+        val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
+
+        // Set existing values
+        editEpisodeTitle.setText(post.episodeTitle)
+        editReview.setText(post.review)
+        ratingBar.rating = post.rating.toFloat()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edit Post")
+            .setView(dialogView)
+            .setPositiveButton("Save") { _, _ ->
+                // Update the mutable properties of the post object
+                post.episodeTitle = editEpisodeTitle.text.toString()
+                post.review = editReview.text.toString()
+                post.rating = ratingBar.rating.toInt()
+
+                postAdapter.notifyDataSetChanged()  // Refresh the list
+                Toast.makeText(requireContext(), "Post updated!", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
