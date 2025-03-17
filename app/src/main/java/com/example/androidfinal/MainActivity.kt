@@ -26,17 +26,21 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
 
-        // Hide Bottom Navigation in Sign In, Sign Up, and Welcome screens
+        // Get profile image
+        val profileImage = findViewById<ImageView>(R.id.profileImage)
+
+        // Hide Bottom Navigation and Profile Image in Welcome, Sign In, and Sign Up screens
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.signInFragment || destination.id == R.id.signUpFragment || destination.id == R.id.welcomeFragment) {
                 bottomNavigationView.visibility = View.GONE
+                profileImage.visibility = View.GONE
             } else {
                 bottomNavigationView.visibility = View.VISIBLE
+                profileImage.visibility = View.VISIBLE
             }
         }
 
         // Set up Profile Image Click Listener (Navigates to User Details Screen)
-        val profileImage = findViewById<ImageView>(R.id.profileImage)
         profileImage.setOnClickListener {
             navController.navigate(R.id.userDetailsFragment)
         }

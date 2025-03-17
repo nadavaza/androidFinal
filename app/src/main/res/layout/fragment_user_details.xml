@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="8dp"/>
+
     <!-- Profile Picture (Clickable to Change) -->
     <ImageView
         android:id="@+id/userProfileImage"
@@ -15,9 +25,10 @@
         android:background="@drawable/circle_background"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonBack"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
     <!-- Edit Name -->
     <EditText

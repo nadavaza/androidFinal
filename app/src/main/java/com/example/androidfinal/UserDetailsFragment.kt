@@ -3,7 +3,6 @@ package com.example.androidfinal
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -35,6 +34,7 @@ class UserDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val buttonBack = view.findViewById<Button>(R.id.buttonBack)
         userProfileImage = view.findViewById(R.id.userProfileImage)
         editUserName = view.findViewById(R.id.editUserName)
         buttonSave = view.findViewById(R.id.buttonSave)
@@ -50,6 +50,11 @@ class UserDetailsFragment : Fragment() {
         // Click listener to save changes
         buttonSave.setOnClickListener {
             saveUserDetails()
+        }
+
+        // Click listener to go back
+        buttonBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
