@@ -1,4 +1,4 @@
-package com.example.androidfinal
+package com.example.androidfinal.models
 
 data class Post(
     val postId: String,

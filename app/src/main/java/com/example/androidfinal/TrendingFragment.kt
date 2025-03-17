@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
+import com.example.androidfinal.models.Post
 
 class TrendingFragment : Fragment() {
 

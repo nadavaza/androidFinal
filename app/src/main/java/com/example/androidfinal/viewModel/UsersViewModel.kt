@@ -28,9 +28,8 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
         checkIfUserLoggedIn()
     }
 
-    fun registerUser(name: String, email: String, password: String) {
+    fun registerUser(newUser: User) {
         viewModelScope.launch {
-            val newUser = User(name = name, email = email, password = password)
             usersDomain.registerUser(newUser) { success ->
                 _loginStatus.postValue(success)
                 if (success) {
