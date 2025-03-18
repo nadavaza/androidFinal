@@ -18,13 +18,8 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
     private val localUserRepository = LocalUserRepository(application)
     private val usersDomain = UsersDomain(localUserRepository)
 
-
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> get() = _currentUser
-
-    init {
-        checkIfUserLoggedIn()
-    }
 
     fun registerUser(newUser: User) {
         viewModelScope.launch {
@@ -61,9 +56,9 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
         }
     }
 
-    private fun checkIfUserLoggedIn() {
+    private fun getUserByEmail(email: String) {
         viewModelScope.launch {
-            usersDomain.getLoggedInUser { user ->
+            usersDomain.getUserByEmail(email) { user ->
                 _currentUser.postValue(user)
             }
         }

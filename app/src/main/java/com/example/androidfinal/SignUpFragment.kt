@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.androidfinal.entities.User
@@ -16,7 +17,7 @@ import com.example.androidfinal.viewModel.UsersViewModel
 
 class SignUpFragment : Fragment() {
 
-    private val usersViewModel: UsersViewModel by viewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +50,6 @@ class SignUpFragment : Fragment() {
                 usersViewModel.registerUser(user)
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
                     if (currentUser != null) {
-                        Toast.makeText(requireContext(), "Sign Up Successful!", Toast.LENGTH_SHORT)
-                            .show()
                         findNavController().navigate(R.id.action_signUp_to_home)
                     } else {
                         Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT)
