@@ -47,7 +47,8 @@ class AddPostFragment : Fragment() {
                         userId = currentUser.id,
                         title = episodeTitle,
                         rating = rating,
-                        review = review
+                        review = review,
+                        photo = ""
                     )
 
                     postsViewModel.addPost(newPost) {

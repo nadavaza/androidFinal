@@ -10,5 +10,6 @@ data class Post(
     val title: String,
     val review: String,
     val rating: Int, // 1-10 rating
+    val photo: String,
     val timestamp: Long = System.currentTimeMillis()
 )

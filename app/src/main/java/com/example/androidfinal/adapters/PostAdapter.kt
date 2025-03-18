@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.R
@@ -25,6 +26,7 @@ class PostAdapter(
         private val textViewReview: TextView = view.findViewById(R.id.textViewReview)
         private val textViewRating: TextView = view.findViewById(R.id.textViewRating)
         private val textViewTimeStamp: TextView = view.findViewById(R.id.textViewTimeStamp)
+        private val imageViewPhoto: ImageView = view.findViewById(R.id.imageViewPhoto)
         private val buttonEditPost: ImageButton = view.findViewById(R.id.buttonEditPost)
         private val buttonDeletePost: ImageButton = view.findViewById(R.id.buttonDeletePost)
 

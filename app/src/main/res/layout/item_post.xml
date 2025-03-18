@@ -55,7 +55,7 @@
             android:id="@+id/textViewTimeStamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
+            android:layout_marginStart="16dp"
             android:text="Date"
             android:textColor="@android:color/darker_gray"
             android:textSize="14sp"
@@ -86,6 +86,16 @@
             app:layout_constraintEnd_toStartOf="@+id/buttonEditPost"
             app:layout_constraintTop_toTopOf="@+id/buttonEditPost"
             app:srcCompat="@drawable/bin" />
+
+        <ImageView
+            android:id="@+id/imageViewPhoto"
+            android:layout_width="92dp"
+            android:layout_height="84dp"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonDeletePost"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDeletePost"
+            app:layout_constraintStart_toEndOf="@+id/textViewTimeStamp"
+            app:layout_constraintTop_toTopOf="@+id/buttonDeletePost"
+            app:srcCompat="@drawable/noanime" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
