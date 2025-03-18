@@ -8,9 +8,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.androidfinal.viewModel.UsersViewModel
 
 class SignInFragment : Fragment() {
+
+    private val usersViewModel: UsersViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,8 +36,15 @@ class SignInFragment : Fragment() {
             val password = editPassword.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                Toast.makeText(requireContext(), "Login Successful!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_signIn_to_home)
+                usersViewModel.login(email, password)
+                usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
+                    if (currentUser != null) {
+                        findNavController().navigate(R.id.action_signIn_to_home)
+                    } else {
+                        Toast.makeText(requireContext(), "Login failed!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
             }

@@ -27,11 +27,6 @@ class UsersDomain(private val localUserRepository: LocalUserRepository) {
 
     fun login(email: String, password: String, callback: (User?) -> Unit) {
         coroutineScope.launch {
-            if (loggedInUser != null && loggedInUser?.email == email) {
-                callback(loggedInUser)
-                return@launch
-            }
-
             val user = localUserRepository.getUserByEmail(email)
             if (user != null && user.password == password) {
                 loggedInUser = user
@@ -59,12 +54,10 @@ class UsersDomain(private val localUserRepository: LocalUserRepository) {
         }
     }
 
-    fun getLoggedInUser(callback: (User?) -> Unit) {
+    fun getUserByEmail(email: String, callback: (User?) -> Unit) {
         coroutineScope.launch {
-            if (loggedInUser != null) {
-                callback(loggedInUser)
-                return@launch
-            }
+            val loggedUser = localUserRepository.getUserByEmail(email)
+            callback(loggedUser)
         }
     }
 }

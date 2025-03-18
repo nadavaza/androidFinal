@@ -11,13 +11,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
+import com.example.androidfinal.entities.User
 import com.example.androidfinal.models.Post
+import com.example.androidfinal.viewModel.UsersViewModel
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
+
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     private lateinit var userProfileImage: ImageView
     private lateinit var editUserName: EditText
@@ -43,7 +50,11 @@ class UserDetailsFragment : Fragment() {
         buttonSave = view.findViewById(R.id.buttonSave)
         recyclerViewUserPosts = view.findViewById(R.id.recyclerViewUserPosts)
 
-        editUserName.setText("John Doe")
+        usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
+            if (currentUser != null) {
+                editUserName.setText(currentUser.name)
+            }
+        }
 
         // Click listener to change profile picture
         userProfileImage.setOnClickListener {
@@ -79,12 +90,16 @@ class UserDetailsFragment : Fragment() {
 
     private fun saveUserDetails() {
         val updatedName = editUserName.text.toString().trim()
-
         if (updatedName.isEmpty()) {
             Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
             return
         }
 
+        var user = usersViewModel.currentUser.value
+        if (user != null) {
+            user.name = updatedName
+            usersViewModel.updateUser(user)
+        }
         Toast.makeText(requireContext(), "User details updated!", Toast.LENGTH_SHORT).show()
     }
 
