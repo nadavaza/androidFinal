@@ -116,10 +116,12 @@ class UserDetailsFragment : Fragment() {
             .setTitle("Edit Post")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
-                // Update the mutable properties of the post object
-//                post.title = editEpisodeTitle.text.toString()
-//                post.review = editReview.text.toString()
-//                post.rating = ratingBar.rating.toInt()
+                val updatedPost = post.copy(
+                    title = editEpisodeTitle.text.toString(),
+                    review = editReview.text.toString(),
+                    rating = ratingBar.rating.toInt()
+                )
+                postsViewModel.updatePost(updatedPost)
                 Toast.makeText(requireContext(), "Post updated!", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
