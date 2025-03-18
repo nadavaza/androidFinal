@@ -3,15 +3,21 @@ package com.example.androidfinal.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.R
-import com.example.androidfinal.models.Post
+import com.example.androidfinal.entities.Post
+import com.example.androidfinal.entities.User
+import com.example.androidfinal.utils.DateUtils
 
 class PostAdapter(
     private val posts: List<Post>,
-    private val onEditClick: (Post) -> Unit
+    private val onEditClick: (Post) -> Unit,
+    private val onDeleteClick: (Post) -> Unit,
+    private val user: User?,
+    private val isProfileScreen: Boolean
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,19 +25,37 @@ class PostAdapter(
         private val textViewEpisodeTitle: TextView = view.findViewById(R.id.textViewEpisodeTitle)
         private val textViewReview: TextView = view.findViewById(R.id.textViewReview)
         private val textViewRating: TextView = view.findViewById(R.id.textViewRating)
-        private val buttonEditPost: Button = view.findViewById(R.id.buttonEditPost)
+        private val textViewTimeStamp: TextView = view.findViewById(R.id.textViewTimeStamp)
+        private val imageViewPhoto: ImageView = view.findViewById(R.id.imageViewPhoto)
+        private val buttonEditPost: ImageButton = view.findViewById(R.id.buttonEditPost)
+        private val buttonDeletePost: ImageButton = view.findViewById(R.id.buttonDeletePost)
 
-        fun bind(post: Post, onEditClick: (Post) -> Unit) {
-            textViewUsername.text = post.username
-            textViewEpisodeTitle.text = post.episodeTitle
+        fun bind(
+            post: Post,
+            onEditClick: (Post) -> Unit,
+            onDeleteClick: (Post) -> Unit,
+            user: User?,
+            isProfileScreen: Boolean
+        ) {
+            textViewUsername.text = "TestUser"
+            textViewEpisodeTitle.text = post.title
             textViewReview.text = post.review
             textViewRating.text = "⭐ ${post.rating}/10"
-
-            // Show edit button only for the logged-in user (e.g., "John Doe")
-            buttonEditPost.visibility = if (post.username == "John Doe") View.VISIBLE else View.GONE
+            textViewTimeStamp.text = DateUtils.formatTimestamp(post.timestamp)
+            if (post.userId == user?.id && isProfileScreen) {
+                buttonEditPost.visibility = View.VISIBLE
+                buttonDeletePost.visibility = View.VISIBLE
+            } else {
+                buttonEditPost.visibility = View.GONE
+                buttonDeletePost.visibility = View.GONE
+            }
 
             buttonEditPost.setOnClickListener {
                 onEditClick(post)
+            }
+
+            buttonDeletePost.setOnClickListener {
+                onDeleteClick(post)
             }
         }
     }
@@ -43,7 +67,7 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position], onEditClick)
+        holder.bind(posts[position], onEditClick, onDeleteClick, user, isProfileScreen)
     }
 
     override fun getItemCount() = posts.size

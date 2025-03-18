@@ -38,6 +38,7 @@ class SignInFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 usersViewModel.login(email, password)
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
+                    println(currentUser)
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signIn_to_home)
                     } else {

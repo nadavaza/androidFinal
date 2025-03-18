@@ -8,28 +8,22 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
-import com.example.androidfinal.models.Post
+import com.example.androidfinal.entities.Post
+import com.example.androidfinal.viewModel.PostsViewModel
+import com.example.androidfinal.viewModel.UsersViewModel
 
 class TrendingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var spinnerFilter: Spinner
-
-    private val allPosts = listOf(
-        Post("1", "AnimeFan123", "Attack on Titan - Episode 12", 9, "Amazing episode!"),
-        Post("2", "OtakuKing", "One Piece - Episode 1056", 8, "Great animation!"),
-        Post("3", "NarutoFan", "Naruto Shippuden - Episode 500", 10, "Best ending ever!"),
-        Post("4", "WeebMaster", "Demon Slayer - Episode 19", 10, "Broke the internet!"),
-        Post("5", "MangaReader", "Jujutsu Kaisen - Episode 24", 9, "Hyped battle!"),
-        Post("6", "BakaSensei", "My Hero Academia - Episode 112", 7, "Good but slow."),
-        Post("7", "OtakuLife", "Vinland Saga - Episode 20", 9, "Emotional!"),
-    )
-
     private var filteredPosts = mutableListOf<Post>()
+    private val postsViewModel: PostsViewModel by activityViewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,29 +43,42 @@ class TrendingFragment : Fragment() {
 
         // Set up Spinner (Dropdown Menu) for Time Filter
         val timeFrames = arrayOf("This Week", "Month", "Year", "All Time")
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timeFrames)
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timeFrames)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerFilter.adapter = spinnerAdapter
 
-        // Set default filter to "This Week"
         applyFilter("This Week")
 
         // Handle filter selection
         spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 applyFilter(timeFrames[position])
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
+            postAdapter = PostAdapter(posts, {}, {}, usersViewModel.currentUser.value, false)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = postAdapter
+        }
     }
 
     private fun applyFilter(filter: String) {
-        // Simulate filtering logic (for now, we just sort by highest rating)
-        filteredPosts = allPosts.sortedByDescending { it.rating }.toMutableList()
+        val timePeriod = when (filter) {
+            "This Week" -> "week"
+            "Month" -> "month"
+            "Year" -> "year"
+            else -> "all"
+        }
 
-        // Refresh RecyclerView with the filtered list
-        postAdapter = PostAdapter(filteredPosts) { } // Pass empty lambda for onEditClick
-        recyclerView.adapter = postAdapter
+        postsViewModel.getTrendingPosts(timePeriod)
     }
 }

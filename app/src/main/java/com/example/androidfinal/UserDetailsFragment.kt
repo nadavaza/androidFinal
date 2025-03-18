@@ -1,5 +1,6 @@
 package com.example.androidfinal
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -12,27 +13,23 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
-import com.example.androidfinal.entities.User
-import com.example.androidfinal.models.Post
+import com.example.androidfinal.entities.Post
+import com.example.androidfinal.viewModel.PostsViewModel
 import com.example.androidfinal.viewModel.UsersViewModel
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
-
-    private val usersViewModel: UsersViewModel by activityViewModels()
-
     private lateinit var userProfileImage: ImageView
     private lateinit var editUserName: EditText
     private lateinit var buttonSave: Button
     private lateinit var recyclerViewUserPosts: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private var selectedImageUri: Uri? = null
-    private val userPosts = mutableListOf<Post>()
+    private val usersViewModel: UsersViewModel by activityViewModels()
+    private val postsViewModel: PostsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,33 +50,34 @@ class UserDetailsFragment : Fragment() {
         usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
             if (currentUser != null) {
                 editUserName.setText(currentUser.name)
+
+                postsViewModel.getPostsByUser(usersViewModel.currentUser.value!!.id)
+                postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
+                    postAdapter = PostAdapter(
+                        posts, // ✅ No need to filter manually
+                        { post -> openEditPostDialog(post) },
+                        { post -> onDeletePost(post) },
+                        usersViewModel.currentUser.value,
+                        true
+                    )
+                    recyclerViewUserPosts.adapter = postAdapter
+                }
             }
         }
 
-        // Click listener to change profile picture
         userProfileImage.setOnClickListener {
             openGallery()
         }
 
-        // Click listener to save user details
         buttonSave.setOnClickListener {
             saveUserDetails()
         }
 
-        // Click listener to go back
         buttonBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // Initialize RecyclerView
         recyclerViewUserPosts.layoutManager = LinearLayoutManager(requireContext())
-
-        // Set adapter with edit callback
-        postAdapter = PostAdapter(userPosts) { post -> openEditPostDialog(post) }
-        recyclerViewUserPosts.adapter = postAdapter
-
-        // Load user posts
-        loadUserPosts()
     }
 
     private fun openGallery() {
@@ -94,7 +92,6 @@ class UserDetailsFragment : Fragment() {
             Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
             return
         }
-
         var user = usersViewModel.currentUser.value
         if (user != null) {
             user.name = updatedName
@@ -103,25 +100,15 @@ class UserDetailsFragment : Fragment() {
         Toast.makeText(requireContext(), "User details updated!", Toast.LENGTH_SHORT).show()
     }
 
-    private fun loadUserPosts() {
-        userPosts.addAll(
-            listOf(
-                Post("1", "John Doe", "Attack on Titan - Episode 12", 9, "Awesome episode!"),
-                Post("2", "John Doe", "One Piece - Episode 1056", 8, "Great animation!"),
-                Post("3", "John Doe", "Naruto Shippuden - Episode 500", 10, "Emotional ending.")
-            )
-        )
-        postAdapter.notifyDataSetChanged()
-    }
-
     private fun openEditPostDialog(post: Post) {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_post, null)
+        val dialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_post, null)
         val editEpisodeTitle = dialogView.findViewById<EditText>(R.id.editEpisodeTitle)
         val editReview = dialogView.findViewById<EditText>(R.id.editReview)
         val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
 
         // Set existing values
-        editEpisodeTitle.setText(post.episodeTitle)
+        editEpisodeTitle.setText(post.title)
         editReview.setText(post.review)
         ratingBar.rating = post.rating.toFloat()
 
@@ -129,16 +116,21 @@ class UserDetailsFragment : Fragment() {
             .setTitle("Edit Post")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
-                // Update the mutable properties of the post object
-                post.episodeTitle = editEpisodeTitle.text.toString()
-                post.review = editReview.text.toString()
-                post.rating = ratingBar.rating.toInt()
-
-                postAdapter.notifyDataSetChanged()  // Refresh the list
+                val updatedPost = post.copy(
+                    title = editEpisodeTitle.text.toString(),
+                    review = editReview.text.toString(),
+                    rating = ratingBar.rating.toInt()
+                )
+                postsViewModel.updatePost(updatedPost)
                 Toast.makeText(requireContext(), "Post updated!", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun onDeletePost(post: Post) {
+        postsViewModel.deletePost(post)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -146,7 +138,10 @@ class UserDetailsFragment : Fragment() {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
             try {
-                val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, selectedImageUri)
+                val bitmap = MediaStore.Images.Media.getBitmap(
+                    requireContext().contentResolver,
+                    selectedImageUri
+                )
                 userProfileImage.setImageBitmap(bitmap)
             } catch (e: IOException) {
                 e.printStackTrace()

@@ -27,9 +27,16 @@ class PostsDomain(private val localPostRepository: LocalPostRepository) {
         }
     }
 
-    fun getPostsByUser(userId: String, callback: (List<Post>) -> Unit) {
+    fun getPostsByUser(userId: Int, callback: (List<Post>) -> Unit) {
         coroutineScope.launch {
             val posts = localPostRepository.getPostsByUser(userId)
+            callback(posts)
+        }
+    }
+
+    fun getTrendingPosts(timePeriod: String, callback: (List<Post>) -> Unit) {
+        coroutineScope.launch {
+            val posts = localPostRepository.getTrendingPosts(timePeriod)
             callback(posts)
         }
     }
