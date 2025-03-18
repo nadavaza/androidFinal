@@ -18,8 +18,6 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
     private val localUserRepository = LocalUserRepository(application)
     private val usersDomain = UsersDomain(localUserRepository)
 
-    private val _loginStatus = MutableLiveData<Boolean>()
-    val loginStatus: LiveData<Boolean> get() = _loginStatus
 
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> get() = _currentUser
@@ -31,7 +29,6 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
     fun registerUser(newUser: User) {
         viewModelScope.launch {
             usersDomain.registerUser(newUser) { success ->
-                _loginStatus.postValue(success)
                 if (success) {
                     _currentUser.postValue(newUser)
                 }
@@ -44,9 +41,6 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
             usersDomain.login(email, password) { user ->
                 if (user != null) {
                     _currentUser.postValue(user)
-                    _loginStatus.postValue(true)
-                } else {
-                    _loginStatus.postValue(false)
                 }
             }
         }
