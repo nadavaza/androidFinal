@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 
-@Database(entities = [User::class, Post::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, Post::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun PostDao(): PostDao

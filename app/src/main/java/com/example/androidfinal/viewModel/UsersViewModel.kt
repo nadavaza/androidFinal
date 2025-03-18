@@ -13,7 +13,7 @@ import com.example.androidfinal.repositories.User.LocalUserRepository
 //import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-class UsersViewModel(application: Application) : AndroidViewModel(application){
+class UsersViewModel(application: Application) : AndroidViewModel(application) {
 
     private val localUserRepository = LocalUserRepository(application)
     private val usersDomain = UsersDomain(localUserRepository)
@@ -36,6 +36,8 @@ class UsersViewModel(application: Application) : AndroidViewModel(application){
             usersDomain.login(email, password) { user ->
                 if (user != null) {
                     _currentUser.postValue(user)
+                } else {
+                    _currentUser.postValue(null)
                 }
             }
         }

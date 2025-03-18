@@ -9,10 +9,17 @@ import android.widget.EditText
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.androidfinal.models.Post
+import androidx.room.PrimaryKey
+import com.example.androidfinal.entities.Post
+import com.example.androidfinal.viewModel.PostsViewModel
+import com.example.androidfinal.viewModel.UsersViewModel
 
 class AddPostFragment : Fragment() {
+
+    private val postsViewModel: PostsViewModel by activityViewModels()
+    private val usersViewModel: UsersViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,33 +31,34 @@ class AddPostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val editTextUsername = view.findViewById<EditText>(R.id.editTextUsername)
         val editTextEpisodeTitle = view.findViewById<EditText>(R.id.editTextEpisodeTitle)
         val editTextReview = view.findViewById<EditText>(R.id.editTextReview)
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
 
         buttonSubmit.setOnClickListener {
-            val username = editTextUsername.text.toString()
             val episodeTitle = editTextEpisodeTitle.text.toString()
             val review = editTextReview.text.toString()
             val rating = ratingBar.rating.toInt()
 
-            if (username.isNotEmpty() && episodeTitle.isNotEmpty() && review.isNotEmpty()) {
-                val newPost = Post(
-                    postId = System.currentTimeMillis().toString(),
-                    username = username,
-                    episodeTitle = episodeTitle,
-                    rating = rating,
-                    review = review
-                )
+            if (episodeTitle.isNotEmpty() && review.isNotEmpty()) {
+                usersViewModel.currentUser.value?.let { currentUser ->
+                    val newPost = Post(
+                        userId = currentUser.id,
+                        title = episodeTitle,
+                        rating = rating,
+                        review = review
+                    )
 
-                Toast.makeText(requireContext(), "Post added!", Toast.LENGTH_SHORT).show()
-
-                // Navigate back to Home (Feed)
-                findNavController().navigate(R.id.nav_feed)
+                    postsViewModel.addPost(newPost) {
+                        requireActivity().runOnUiThread {
+                            findNavController().navigate(R.id.nav_feed)
+                        }
+                    }
+                }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill all fields!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

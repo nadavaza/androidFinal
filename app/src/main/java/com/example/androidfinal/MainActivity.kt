@@ -5,34 +5,36 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.androidfinal.viewModel.UsersViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private val usersViewModel: UsersViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Set up the Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // Get NavController from NavHostFragment
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Set up Bottom Navigation with Navigation Component
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.itemIconTintList = null
         bottomNavigationView.setupWithNavController(navController)
 
-        // Get profile image and sign out button
         val profileImage = findViewById<ImageView>(R.id.profileImage)
         val buttonSignOut = findViewById<Button>(R.id.buttonSignOut)
 
-        // Hide Bottom Navigation, Profile Image, and Sign Out Button in Welcome, Sign In, and Sign Up screens
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.signInFragment || destination.id == R.id.signUpFragment || destination.id == R.id.welcomeFragment) {
                 bottomNavigationView.visibility = View.GONE
@@ -45,16 +47,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Sign Out Button Click (Navigates to Welcome Screen)
         buttonSignOut.setOnClickListener {
-            // Simulate Logout
-            Toast.makeText(this, "Logged out!", Toast.LENGTH_SHORT).show()
-
-            // Navigate to Welcome Screen
+            usersViewModel.logout()
             navController.navigate(R.id.welcomeFragment)
         }
 
-        // Profile Picture Click (Navigates to User Details Screen)
         profileImage.setOnClickListener {
             navController.navigate(R.id.userDetailsFragment)
         }
