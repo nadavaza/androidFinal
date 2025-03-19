@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidfinal.domains.PostsDomain
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
+import com.example.androidfinal.repositories.Post.FireBasePostRepository
 import com.example.androidfinal.repositories.Post.LocalPostRepository
 //import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val localPostRepository = LocalPostRepository(application)
-    private val postDomain = PostsDomain(localPostRepository)
+    private val fireBasePostRepository = FireBasePostRepository()
+    private val postDomain = PostsDomain(localPostRepository, fireBasePostRepository)
 
     private val animeViewModel = AnimeViewModel(application)
 
@@ -32,7 +34,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getAllPosts() {
         viewModelScope.launch {
-            postDomain.getAllPosts { postList ->
+            postDomain.getAllPosts(Post.lastUpdated) { postList ->
                 _posts.postValue(postList)
             }
         }
@@ -63,14 +65,13 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
                     getAllPosts()
                     onComplete()
                 }
-
             }
         }
     }
 
     fun updatePost(post: Post) {
         viewModelScope.launch {
-            postDomain.updatePost(post) { success ->
+            postDomain.updatePost(post.id, post) { success ->
                 if (success) getPostsByUser(post.userId)
             }
         }

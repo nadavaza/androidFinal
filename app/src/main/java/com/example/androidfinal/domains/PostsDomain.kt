@@ -2,56 +2,101 @@ package com.example.androidfinal.domains
 
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
-import com.example.androidfinal.entities.User
+import com.example.androidfinal.repositories.Post.FireBasePostRepository
 import com.example.androidfinal.repositories.Post.LocalPostRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class PostsDomain(private val localPostRepository: LocalPostRepository) {
+class PostsDomain(
+    private val localPostRepository: LocalPostRepository,
+    private val fireBasePostRepository: FireBasePostRepository
+) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
 
     fun addPost(post: Post, callback: (Boolean) -> Unit) {
         coroutineScope.launch {
             localPostRepository.insertPost(post)
-            callback(true)
+            fireBasePostRepository.insertPost(post) { success ->
+                callback(success)
+            }
         }
     }
 
-    fun getAllPosts(callback: (List<Post>) -> Unit) {
+    fun getAllPosts(lastUpdated: Long, callback: (List<Post>) -> Unit) {
         coroutineScope.launch {
-            val posts = localPostRepository.getAllPosts()
-            callback(posts)
+            fireBasePostRepository.getAllPosts(lastUpdated) { firebasePosts ->
+                if (firebasePosts.isNotEmpty()) {
+                    localPostRepository.clearAndInsert(firebasePosts)
+                    callback(firebasePosts)
+                } else {
+                    coroutineScope.launch {
+                        val localPosts = localPostRepository.getAllPosts()
+                        callback(localPosts)
+                    }
+                }
+            }
         }
     }
 
     fun getPostsByUser(userId: String, callback: (List<Post>) -> Unit) {
         coroutineScope.launch {
-            val posts = localPostRepository.getPostsByUser(userId)
-            callback(posts)
+            fireBasePostRepository.getPostsByUser(userId) { firebasePosts ->
+                if (firebasePosts.isNotEmpty()) {
+                    localPostRepository.clearAndInsert(firebasePosts)
+                    callback(firebasePosts)
+                } else {
+                    coroutineScope.launch {
+                        val localPosts = localPostRepository.getPostsByUser(userId)
+                        callback(localPosts)
+                    }
+                }
+            }
         }
     }
 
     fun getTrendingPosts(timePeriod: String, callback: (List<TrendingPost>) -> Unit) {
         coroutineScope.launch {
-            val trendingPosts = localPostRepository.getTrendingPosts(timePeriod)
-            callback(trendingPosts)
+            val cachedTrendingPosts = localPostRepository.getTrendingPosts(timePeriod)
+            callback(cachedTrendingPosts)
+
+            fireBasePostRepository.getTrendingPosts(timePeriod) { firebaseTrendingPosts ->
+                if (firebaseTrendingPosts.isNotEmpty()) {
+                    callback(firebaseTrendingPosts)
+                }
+            }
         }
     }
 
-    fun updatePost(post: Post, callback: (Boolean) -> Unit) {
+    fun updatePost(postId: String, updatedPost: Post, callback: (Boolean) -> Unit) {
         coroutineScope.launch {
-            val updatedRows = localPostRepository.updatePost(post)
-            callback(updatedRows > 0)
+            fireBasePostRepository.updatePost(postId, updatedPost) { success ->
+                if (success) {
+                    coroutineScope.launch {
+                        val updatedRows = localPostRepository.updatePost(updatedPost)
+                        callback(updatedRows > 0)
+                    }
+                }
+                callback(success)
+            }
         }
+
+
     }
 
     fun deletePost(post: Post, callback: (Boolean) -> Unit) {
         coroutineScope.launch {
-            localPostRepository.deletePost(post)
-            callback(true)
+            fireBasePostRepository.deletePost(post) { success ->
+                if (success) {
+                    coroutineScope.launch {
+                        localPostRepository.deletePost(post)
+                        callback(true)
+                    }
+                }
+                callback(success)
+            }
         }
     }
 }
