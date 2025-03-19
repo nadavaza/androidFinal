@@ -3,6 +3,7 @@ package com.example.androidfinal.entities.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.androidfinal.entities.Post
+import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.entities.User
 
 @Dao
@@ -17,11 +18,28 @@ interface PostDao {
     @Query("SELECT * FROM posts ORDER BY timestamp DESC")
     suspend fun getAllPosts(): List<Post>
 
-    @Query("SELECT * FROM posts WHERE timestamp >= :startTime ORDER BY rating DESC LIMIT 50")
-    suspend fun getTrendingPosts(startTime: Long): List<Post>
+    @Query("""
+    SELECT p.title, 
+           COUNT(p.id) AS postCount,
+           AVG(p.rating) AS avgRating
+    FROM posts p
+    WHERE p.timestamp >= :startTime
+    GROUP BY p.title
+    ORDER BY avgRating DESC
+    LIMIT 50
+""")
+    fun getTrendingPosts(startTime: Long): List<TrendingPost>
 
-    @Query("SELECT * FROM posts ORDER BY rating DESC LIMIT 50")
-    suspend fun getAllTimeTrendingPosts(): List<Post>
+    @Query("""
+    SELECT p.title, 
+           COUNT(p.id) AS postCount,
+           AVG(p.rating) AS avgRating
+    FROM posts p
+    GROUP BY p.title
+    ORDER BY avgRating DESC
+    LIMIT 50
+""")
+    suspend fun getAllTimeTrendingPosts(): List<TrendingPost>
 
     @Update
     suspend fun updatePost(post: Post): Int

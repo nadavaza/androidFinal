@@ -41,8 +41,9 @@ class AnimeRepository {
                         val episodes = anime.episodes ?: 0
                         List(episodes) { epNum ->
                             EpisodeInfo(
-                                title = anime.title,
-                                epNum = epNum + 1
+                                title = "${anime.title} - Episode ${epNum + 1}",
+                                epNum = epNum + 1,
+                                photo = anime.images.jpg.imageUrl
                             )
                         }
                     }

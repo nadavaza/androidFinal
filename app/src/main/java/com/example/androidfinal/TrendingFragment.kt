@@ -12,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
+import com.example.androidfinal.adapters.TrendingPostAdapter
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.viewModel.PostsViewModel
 import com.example.androidfinal.viewModel.UsersViewModel
@@ -19,7 +20,7 @@ import com.example.androidfinal.viewModel.UsersViewModel
 class TrendingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter
+    private lateinit var TrendingPostAdapter: TrendingPostAdapter
     private lateinit var spinnerFilter: Spinner
     private var filteredPosts = mutableListOf<Post>()
     private val postsViewModel: PostsViewModel by activityViewModels()
@@ -64,10 +65,10 @@ class TrendingFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
-            postAdapter = PostAdapter(posts, {}, {}, usersViewModel.currentUser.value, false)
+        postsViewModel.trendingPosts.observe(viewLifecycleOwner) { posts ->
+            TrendingPostAdapter = TrendingPostAdapter(posts)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = postAdapter
+            recyclerView.adapter = TrendingPostAdapter
         }
     }
 

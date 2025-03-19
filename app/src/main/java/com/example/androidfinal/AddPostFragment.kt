@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
@@ -14,10 +13,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.room.PrimaryKey
 import com.example.androidfinal.entities.EpisodeInfo
 import com.example.androidfinal.entities.Post
-import com.example.androidfinal.repositories.Anime.AnimeRepository
+import com.example.androidfinal.viewModel.AnimeViewModel
 import com.example.androidfinal.viewModel.PostsViewModel
 import com.example.androidfinal.viewModel.UsersViewModel
 
@@ -25,6 +23,7 @@ class AddPostFragment : Fragment() {
 
     private val postsViewModel: PostsViewModel by activityViewModels()
     private val usersViewModel: UsersViewModel by activityViewModels()
+    private val animeViewModel: AnimeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +40,7 @@ class AddPostFragment : Fragment() {
         val ratingBar = view.findViewById<RatingBar>(R.id.ratingBar)
         val buttonSubmit = view.findViewById<Button>(R.id.buttonSubmit)
 
-        AnimeRepository().fetchAnimeList { episodeInfos: List<EpisodeInfo> ->
+        animeViewModel.episodes.observe(viewLifecycleOwner) { episodeInfos: List<EpisodeInfo> ->
             requireActivity().runOnUiThread {
                 val episodes = episodeInfos.map { "${it.title} - Episode ${it.epNum}" }
                 val adapter = ArrayAdapter(

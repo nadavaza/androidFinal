@@ -8,10 +8,20 @@ data class AnimeResponse(
 
 data class Anime(
     @SerializedName("title") val title: String,
-    @SerializedName("episodes") val episodes: Int?
+    @SerializedName("episodes") val episodes: Int?,
+    @SerializedName("images") val images: ImageWrapper
+)
+
+data class ImageWrapper(
+    @SerializedName("jpg") val jpg: ImageUrl
+)
+
+data class ImageUrl(
+    @SerializedName("image_url") val imageUrl: String
 )
 
 data class EpisodeInfo(
     val title: String,
-    val epNum: Int
+    val epNum: Int,
+    val photo: String
 )
