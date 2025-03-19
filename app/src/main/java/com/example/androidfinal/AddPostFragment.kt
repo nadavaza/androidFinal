@@ -42,7 +42,7 @@ class AddPostFragment : Fragment() {
 
         animeViewModel.episodes.observe(viewLifecycleOwner) { episodeInfos: List<EpisodeInfo> ->
             requireActivity().runOnUiThread {
-                val episodes = episodeInfos.map { "${it.title} - Episode ${it.epNum}" }
+                val episodes = episodeInfos.map { it.title }
                 val adapter = ArrayAdapter(
                     requireContext(),
                     android.R.layout.simple_spinner_dropdown_item,
