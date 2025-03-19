@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
-            if (user != null && !user.profileImageUri.isNullOrEmpty()) {
-                profileImage.setImageURI(Uri.parse(user.profileImageUri))
+            if (user != null && !user.photo.isNullOrEmpty()) {
+                profileImage.setImageURI(Uri.parse(user.photo))
             } else {
                 profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             }

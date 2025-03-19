@@ -52,8 +52,8 @@ class UserDetailsFragment : Fragment() {
                 editUserName.setText(currentUser.name)
 
                 // Load user's profile picture
-                if (!currentUser.profileImageUri.isNullOrEmpty()) {
-                    userProfileImage.setImageURI(Uri.parse(currentUser.profileImageUri))
+                if (!currentUser.photo.isNullOrEmpty()) {
+                    userProfileImage.setImageURI(Uri.parse(currentUser.photo))
                 }
 
                 postsViewModel.getPostsByUser(currentUser.id)
@@ -98,12 +98,12 @@ class UserDetailsFragment : Fragment() {
         if (currentUser != null) {
             val updatedUser = currentUser.copy(
                 name = updatedName,
-                profileImageUri = selectedImageUri?.toString() ?: currentUser.profileImageUri
+                photo = selectedImageUri?.toString() ?: currentUser.photo
             )
             usersViewModel.updateUser(updatedUser)
 
             // Update profile image in MainActivity
-            (requireActivity() as? MainActivity)?.updateProfileImage(updatedUser.profileImageUri)
+            (requireActivity() as? MainActivity)?.updateProfileImage(updatedUser.photo)
         }
 
         Toast.makeText(requireContext(), "User details updated!", Toast.LENGTH_SHORT).show()

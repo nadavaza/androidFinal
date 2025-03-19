@@ -55,7 +55,7 @@ class SignUpFragment : Fragment() {
                     email = email,
                     password = password,
                     name = name,
-                    photo = selectedImageUri?.toString(), // Provide an empty string or a default profile picture URL
+                    photo = selectedImageUri?.toString() ?: "", // Provide an empty string or a default profile picture URL
                     lastUpdated = System.currentTimeMillis()
                 )
 
@@ -64,11 +64,13 @@ class SignUpFragment : Fragment() {
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signUp_to_home)
                     } else {
-                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
