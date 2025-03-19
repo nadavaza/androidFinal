@@ -22,15 +22,26 @@ class TrendingPostAdapter(private val trendingPosts: List<TrendingPost>) :
 
         fun bind(trendingPost: TrendingPost) {
             textViewTitle.text = trendingPost.title
-            textViewAvgRating.text = "⭐ ${trendingPost.avgRating}/10 Avg"
+            textViewAvgRating.text = "⭐ ${roundToHalf(trendingPost.avgRating.toDouble())}/10 Avg"
             textViewPostCount.text = "${trendingPost.postCount} Posts"
 
-            if (trendingPost.photo?.isNotEmpty() == true)
+            if (!trendingPost.photo.isNullOrEmpty()) {
                 Picasso.get()
                     .load(trendingPost.photo)
                     .placeholder(R.drawable.noanime)
                     .error(R.drawable.noanime)
                     .into(imageViewThumbnail)
+            }
+        }
+
+        // Function to round rating to nearest 0.5 or whole number
+        private fun roundToHalf(value: Double): String {
+            val roundedValue = (Math.round(value * 2) / 2.0) // Ensure rounding to .0 or .5
+            return if (roundedValue % 1.0 == 0.0) {
+                String.format("%.0f", roundedValue) // Whole number (e.g., 4)
+            } else {
+                String.format("%.1f", roundedValue) // Half number (e.g., 4.5)
+            }
         }
     }
 
