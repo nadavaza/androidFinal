@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.androidfinal.viewModel.UsersViewModel
@@ -45,6 +43,16 @@ class MainActivity : AppCompatActivity() {
                 profileImage.visibility = View.VISIBLE
                 buttonSignOut.visibility = View.VISIBLE
             }
+        }
+
+        // ✅ Updated to match renamed IDs in `bottom_nav_menu.xml`
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_feed -> navController.navigate(R.id.nav_feed)  // ✅ Changed from R.id.nav_feed
+                R.id.menu_add -> navController.navigate(R.id.nav_add)    // ✅ Changed from R.id.nav_add
+                R.id.menu_trending -> navController.navigate(R.id.nav_trending)  // ✅ Changed from R.id.nav_trending
+            }
+            true
         }
 
         buttonSignOut.setOnClickListener {
