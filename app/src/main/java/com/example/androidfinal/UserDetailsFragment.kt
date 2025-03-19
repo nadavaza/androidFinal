@@ -41,7 +41,6 @@ class UserDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val buttonBack = view.findViewById<Button>(R.id.buttonBack)
         userProfileImage = view.findViewById(R.id.userProfileImage)
         editUserName = view.findViewById(R.id.editUserName)
         buttonSave = view.findViewById(R.id.buttonSave)
@@ -71,10 +70,6 @@ class UserDetailsFragment : Fragment() {
 
         buttonSave.setOnClickListener {
             saveUserDetails()
-        }
-
-        buttonBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         recyclerViewUserPosts.layoutManager = LinearLayoutManager(requireContext())
