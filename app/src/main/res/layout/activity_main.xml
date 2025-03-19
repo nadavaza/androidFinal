@@ -12,6 +12,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:title="AniRate"
+        app:title="AniRate"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:titleTextColor="@android:color/white"
         android:titleTextColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent" />
 
