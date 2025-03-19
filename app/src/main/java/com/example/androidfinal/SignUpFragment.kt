@@ -51,10 +51,12 @@ class SignUpFragment : Fragment() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 val user = User(
+                    id = "", // Provide a default empty string or generate a unique ID
                     email = email,
                     password = password,
                     name = name,
-                    profileImageUri = selectedImageUri?.toString() // Save selected image URI
+                    photo = selectedImageUri?.toString() ?: "", // Provide an empty string or a default profile picture URL
+                    lastUpdated = System.currentTimeMillis()
                 )
 
                 usersViewModel.registerUser(user)
@@ -62,11 +64,13 @@ class SignUpFragment : Fragment() {
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signUp_to_home)
                     } else {
-                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 

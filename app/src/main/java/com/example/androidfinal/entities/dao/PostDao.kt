@@ -13,12 +13,13 @@ interface PostDao {
     suspend fun insertPost(post: Post)
 
     @Query("SELECT * FROM posts WHERE userId = :userId ORDER BY timestamp DESC")
-    suspend fun getPostsByUser(userId: Int): List<Post>
+    suspend fun getPostsByUser(userId: String): List<Post>
 
     @Query("SELECT * FROM posts ORDER BY timestamp DESC")
     suspend fun getAllPosts(): List<Post>
 
-    @Query("""
+    @Query(
+        """
     SELECT p.title, 
            COUNT(p.id) AS postCount,
            AVG(p.rating) AS avgRating
@@ -27,10 +28,12 @@ interface PostDao {
     GROUP BY p.title
     ORDER BY avgRating DESC
     LIMIT 50
-""")
+"""
+    )
     fun getTrendingPosts(startTime: Long): List<TrendingPost>
 
-    @Query("""
+    @Query(
+        """
     SELECT p.title, 
            COUNT(p.id) AS postCount,
            AVG(p.rating) AS avgRating
@@ -38,7 +41,8 @@ interface PostDao {
     GROUP BY p.title
     ORDER BY avgRating DESC
     LIMIT 50
-""")
+"""
+    )
     suspend fun getAllTimeTrendingPosts(): List<TrendingPost>
 
     @Update

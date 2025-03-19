@@ -11,7 +11,7 @@ class LocalPostRepository(context: Context) {
 
     suspend fun getAllPosts(): List<Post> = postDao.getAllPosts()
 
-    suspend fun getPostsByUser(userId: Int): List<Post> = postDao.getPostsByUser(userId)
+    suspend fun getPostsByUser(userId: String): List<Post> = postDao.getPostsByUser(userId)
 
     suspend fun getTrendingPosts(timePeriod: String): List<TrendingPost> {
         val currentTime = System.currentTimeMillis()

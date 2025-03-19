@@ -4,7 +4,6 @@ import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.repositories.Post.LocalPostRepository
-import com.example.androidfinal.repositories.User.LocalUserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,7 +27,7 @@ class PostsDomain(private val localPostRepository: LocalPostRepository) {
         }
     }
 
-    fun getPostsByUser(userId: Int, callback: (List<Post>) -> Unit) {
+    fun getPostsByUser(userId: String, callback: (List<Post>) -> Unit) {
         coroutineScope.launch {
             val posts = localPostRepository.getPostsByUser(userId)
             callback(posts)

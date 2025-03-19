@@ -9,36 +9,25 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidfinal.domains.UsersDomain
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.entities.dao.AppDatabase
-import com.example.androidfinal.repositories.User.LocalUserRepository
+import com.example.androidfinal.repositories.User.FireBaseUserRepository
 //import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class UsersViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val localUserRepository = LocalUserRepository(application)
-    private val usersDomain = UsersDomain(localUserRepository)
+    private val usersDomain = UsersDomain(FireBaseUserRepository())
 
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> get() = _currentUser
 
     fun registerUser(newUser: User) {
-        viewModelScope.launch {
-            usersDomain.registerUser(newUser) { success ->
-                if (success) {
-                    _currentUser.postValue(newUser)
-                }
-            }
-        }
+        usersDomain.registerUser(newUser) { user -> _currentUser.postValue(user) }
     }
 
     fun login(email: String, password: String) {
-        viewModelScope.launch {
-            usersDomain.login(email, password) { user ->
-                if (user != null) {
-                    _currentUser.postValue(user)
-                } else {
-                    _currentUser.postValue(null)
-                }
+        usersDomain.login(email, password) { logged ->
+            if (logged != null) {
+                usersDomain.getUser { user -> _currentUser.postValue(user) }
             }
         }
     }
@@ -48,21 +37,19 @@ class UsersViewModel(application: Application) : AndroidViewModel(application) {
         _currentUser.postValue(null)
     }
 
-    fun updateUser(user: User) {
-        viewModelScope.launch {
-            usersDomain.updateUser(user) { success ->
-                if (success) {
-                    _currentUser.postValue(user)
+    fun getUser() {
+        usersDomain.getUser { user -> _currentUser.postValue(user) }
+    }
+
+    fun updateUser(updatedUser: User) {
+        val current = _currentUser.value
+        if (current != null) {
+            usersDomain.updateUser(current.id, updatedUser) { isUpdated ->
+                if (isUpdated) {
+                    _currentUser.postValue(updatedUser)
                 }
             }
         }
     }
 
-    private fun getUserByEmail(email: String) {
-        viewModelScope.launch {
-            usersDomain.getUserByEmail(email) { user ->
-                _currentUser.postValue(user)
-            }
-        }
-    }
 }
