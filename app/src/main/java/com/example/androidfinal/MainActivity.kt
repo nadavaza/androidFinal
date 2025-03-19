@@ -1,5 +1,6 @@
 package com.example.androidfinal
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -23,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -45,23 +47,51 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Updated to match renamed IDs in `bottom_nav_menu.xml`
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_feed -> navController.navigate(R.id.nav_feed)  // ✅ Changed from R.id.nav_feed
-                R.id.menu_add -> navController.navigate(R.id.nav_add)    // ✅ Changed from R.id.nav_add
-                R.id.menu_trending -> navController.navigate(R.id.nav_trending)  // ✅ Changed from R.id.nav_trending
+        // ✅ Observe currentUser and update profile picture accordingly
+        usersViewModel.currentUser.observe(this) { user ->
+            if (user != null && !user.profileImageUri.isNullOrEmpty()) {
+                profileImage.setImageURI(Uri.parse(user.profileImageUri))
+            } else {
+                profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             }
-            true
         }
 
+        // ✅ Fix: Reset profile picture on logout
         buttonSignOut.setOnClickListener {
             usersViewModel.logout()
+
+            // Reset profile picture to default
+            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
+
+            // Navigate to Welcome Screen
             navController.navigate(R.id.welcomeFragment)
         }
 
         profileImage.setOnClickListener {
             navController.navigate(R.id.userDetailsFragment)
+        }
+
+        // ✅ Fix: Ensure bottom navigation works correctly
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_feed -> navController.navigate(R.id.nav_feed)
+                R.id.menu_add -> navController.navigate(R.id.nav_add)
+                R.id.menu_trending -> navController.navigate(R.id.nav_trending)
+            }
+            true
+        }
+    }
+
+    /**
+     * Updates the profile image in the toolbar.
+     * This method is called from `UserDetailsFragment` when the user updates their profile picture.
+     */
+    fun updateProfileImage(imageUri: String?) {
+        val profileImage = findViewById<ImageView>(R.id.profileImage)
+        if (!imageUri.isNullOrEmpty()) {
+            profileImage.setImageURI(Uri.parse(imageUri))
+        } else {
+            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
         }
     }
 }

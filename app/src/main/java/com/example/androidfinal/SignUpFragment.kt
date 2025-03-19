@@ -1,16 +1,16 @@
 package com.example.androidfinal
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.viewModel.UsersViewModel
@@ -18,6 +18,7 @@ import com.example.androidfinal.viewModel.UsersViewModel
 class SignUpFragment : Fragment() {
 
     private val usersViewModel: UsersViewModel by activityViewModels()
+    private var selectedImageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +34,16 @@ class SignUpFragment : Fragment() {
         val editName = view.findViewById<EditText>(R.id.editName)
         val editPassword = view.findViewById<EditText>(R.id.editPassword)
         val buttonSignUp = view.findViewById<Button>(R.id.buttonSignUp)
-        val textHaveAccount =
-            view.findViewById<TextView>(R.id.textHaveAccount) // <-- Added reference
+        val buttonChooseProfileImage = view.findViewById<Button>(R.id.buttonChooseProfileImage)
+        val profileImageView = view.findViewById<ImageView>(R.id.profileImageView)
+        val textHaveAccount = view.findViewById<TextView>(R.id.textHaveAccount)
 
+        // Handle selecting a profile image
+        buttonChooseProfileImage.setOnClickListener {
+            openGallery()
+        }
+
+        // Handle sign-up logic
         buttonSignUp.setOnClickListener {
             val email = editEmail.text.toString().trim()
             val password = editPassword.text.toString().trim()
@@ -47,27 +55,42 @@ class SignUpFragment : Fragment() {
                     email = email,
                     password = password,
                     name = name,
-                    photo = "", // Provide an empty string or a default profile picture URL
+                    photo = selectedImageUri?.toString(), // Provide an empty string or a default profile picture URL
                     lastUpdated = System.currentTimeMillis()
                 )
+
                 usersViewModel.registerUser(user)
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signUp_to_home)
                     } else {
-                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Navigate to Sign In screen when clicking "Already have an account? Sign In"
         textHaveAccount.setOnClickListener {
             findNavController().navigate(R.id.action_signUp_to_signIn)
         }
     }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = "image/*"
+        }
+        imagePickerLauncher.launch(intent)
+    }
+
+    private val imagePickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                selectedImageUri = result.data!!.data
+                val profileImageView = view?.findViewById<ImageView>(R.id.profileImageView)
+                profileImageView?.setImageURI(selectedImageUri)
+                profileImageView?.visibility = View.VISIBLE
+            }
+        }
 }
