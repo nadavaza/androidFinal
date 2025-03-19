@@ -38,7 +38,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getPostsByUser(userId: Int) {
+    fun getPostsByUser(userId: String) {
         viewModelScope.launch {
             postDomain.getPostsByUser(userId) { posts -> _posts.postValue(posts) }
         }

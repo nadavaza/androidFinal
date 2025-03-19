@@ -43,9 +43,12 @@ class SignUpFragment : Fragment() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 val user = User(
+                    id = "", // Provide a default empty string or generate a unique ID
                     email = email,
                     password = password,
                     name = name,
+                    photo = "", // Provide an empty string or a default profile picture URL
+                    lastUpdated = System.currentTimeMillis()
                 )
                 usersViewModel.registerUser(user)
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
@@ -56,8 +59,6 @@ class SignUpFragment : Fragment() {
                             .show()
                     }
                 }
-
-
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
                     .show()
