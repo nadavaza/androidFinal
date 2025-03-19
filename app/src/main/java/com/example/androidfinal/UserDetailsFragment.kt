@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.adapters.PostAdapter
 import com.example.androidfinal.entities.Post
+import com.example.androidfinal.entities.User
 import com.example.androidfinal.viewModel.PostsViewModel
 import com.example.androidfinal.viewModel.UsersViewModel
 import java.io.IOException
@@ -50,13 +51,18 @@ class UserDetailsFragment : Fragment() {
             if (currentUser != null) {
                 editUserName.setText(currentUser.name)
 
-                postsViewModel.getPostsByUser(usersViewModel.currentUser.value!!.id)
+                // Load user's profile picture
+                if (!currentUser.profileImageUri.isNullOrEmpty()) {
+                    userProfileImage.setImageURI(Uri.parse(currentUser.profileImageUri))
+                }
+
+                postsViewModel.getPostsByUser(currentUser.id)
                 postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
                     postAdapter = PostAdapter(
-                        posts, // ✅ No need to filter manually
+                        posts,
                         { post -> openEditPostDialog(post) },
                         { post -> onDeletePost(post) },
-                        usersViewModel.currentUser.value,
+                        currentUser,
                         true
                     )
                     recyclerViewUserPosts.adapter = postAdapter
@@ -87,11 +93,19 @@ class UserDetailsFragment : Fragment() {
             Toast.makeText(requireContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show()
             return
         }
-        var user = usersViewModel.currentUser.value
-        if (user != null) {
-            user.name = updatedName
-            usersViewModel.updateUser(user)
+
+        val currentUser = usersViewModel.currentUser.value
+        if (currentUser != null) {
+            val updatedUser = currentUser.copy(
+                name = updatedName,
+                profileImageUri = selectedImageUri?.toString() ?: currentUser.profileImageUri
+            )
+            usersViewModel.updateUser(updatedUser)
+
+            // Update profile image in MainActivity
+            (requireActivity() as? MainActivity)?.updateProfileImage(updatedUser.profileImageUri)
         }
+
         Toast.makeText(requireContext(), "User details updated!", Toast.LENGTH_SHORT).show()
     }
 
@@ -102,7 +116,6 @@ class UserDetailsFragment : Fragment() {
         val editReview = dialogView.findViewById<EditText>(R.id.editReview)
         val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
 
-        // Set existing values
         editEpisodeTitle.setText(post.title)
         editReview.setText(post.review)
         ratingBar.rating = post.rating.toFloat()
@@ -133,11 +146,7 @@ class UserDetailsFragment : Fragment() {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
             try {
-                val bitmap = MediaStore.Images.Media.getBitmap(
-                    requireContext().contentResolver,
-                    selectedImageUri
-                )
-                userProfileImage.setImageBitmap(bitmap)
+                userProfileImage.setImageURI(selectedImageUri)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

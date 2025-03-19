@@ -1,5 +1,6 @@
 package com.example.androidfinal
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -23,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -55,6 +57,12 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        usersViewModel.currentUser.observe(this) { user ->
+            user?.profileImageUri?.let { imageUri ->
+                profileImage.setImageURI(Uri.parse(imageUri))
+            }
+        }
+
         buttonSignOut.setOnClickListener {
             usersViewModel.logout()
             navController.navigate(R.id.welcomeFragment)
@@ -62,6 +70,17 @@ class MainActivity : AppCompatActivity() {
 
         profileImage.setOnClickListener {
             navController.navigate(R.id.userDetailsFragment)
+        }
+    }
+
+    /**
+     * Updates the profile image in the toolbar.
+     * This method is called from `UserDetailsFragment` when the user updates their profile picture.
+     */
+    fun updateProfileImage(imageUri: String?) {
+        val profileImage = findViewById<ImageView>(R.id.profileImage)
+        if (!imageUri.isNullOrEmpty()) {
+            profileImage.setImageURI(Uri.parse(imageUri))
         }
     }
 }
