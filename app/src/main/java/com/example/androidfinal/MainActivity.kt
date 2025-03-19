@@ -47,29 +47,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Updated to match renamed IDs in `bottom_nav_menu.xml`
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_feed -> navController.navigate(R.id.nav_feed)  // ✅ Changed from R.id.nav_feed
-                R.id.menu_add -> navController.navigate(R.id.nav_add)    // ✅ Changed from R.id.nav_add
-                R.id.menu_trending -> navController.navigate(R.id.nav_trending)  // ✅ Changed from R.id.nav_trending
-            }
-            true
-        }
-
+        // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
-            user?.profileImageUri?.let { imageUri ->
-                profileImage.setImageURI(Uri.parse(imageUri))
+            if (user != null && !user.profileImageUri.isNullOrEmpty()) {
+                profileImage.setImageURI(Uri.parse(user.profileImageUri))
+            } else {
+                profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             }
         }
 
+        // ✅ Fix: Reset profile picture on logout
         buttonSignOut.setOnClickListener {
             usersViewModel.logout()
+
+            // Reset profile picture to default
+            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
+
+            // Navigate to Welcome Screen
             navController.navigate(R.id.welcomeFragment)
         }
 
         profileImage.setOnClickListener {
             navController.navigate(R.id.userDetailsFragment)
+        }
+
+        // ✅ Fix: Ensure bottom navigation works correctly
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_feed -> navController.navigate(R.id.nav_feed)
+                R.id.menu_add -> navController.navigate(R.id.nav_add)
+                R.id.menu_trending -> navController.navigate(R.id.nav_trending)
+            }
+            true
         }
     }
 
@@ -81,6 +90,8 @@ class MainActivity : AppCompatActivity() {
         val profileImage = findViewById<ImageView>(R.id.profileImage)
         if (!imageUri.isNullOrEmpty()) {
             profileImage.setImageURI(Uri.parse(imageUri))
+        } else {
+            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
         }
     }
 }
