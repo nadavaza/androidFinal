@@ -1,5 +1,6 @@
 package com.example.androidfinal.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.androidfinal.R
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.utils.DateUtils
+import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private val posts: List<Post>,
@@ -37,11 +39,28 @@ class PostAdapter(
             user: User?,
             isProfileScreen: Boolean
         ) {
-            textViewUsername.text = "TestUser"
+            // ✅ Display the correct username (fetch dynamically if needed)
+            textViewUsername.text = user?.name ?: "Unknown User"
             textViewEpisodeTitle.text = post.title
             textViewReview.text = post.review
             textViewRating.text = "⭐ ${post.rating}/10"
             textViewTimeStamp.text = DateUtils.formatTimestamp(post.timestamp)
+
+
+            if (!post.photo.isNullOrEmpty()) {
+                val imageUri = Uri.parse(post.photo)
+
+                try {
+                    // ✅ Try setting image directly (works for local images)
+                    imageViewPhoto.setImageURI(imageUri)
+                } catch (e: Exception) {
+                    imageViewPhoto.setImageResource(R.drawable.noanime)
+                }
+            } else {
+                imageViewPhoto.setImageResource(R.drawable.noanime)
+            }
+
+            // ✅ Show edit & delete buttons only if the post belongs to the current user
             if (post.userId == user?.id && isProfileScreen) {
                 buttonEditPost.visibility = View.VISIBLE
                 buttonDeletePost.visibility = View.VISIBLE
@@ -50,19 +69,14 @@ class PostAdapter(
                 buttonDeletePost.visibility = View.GONE
             }
 
-            buttonEditPost.setOnClickListener {
-                onEditClick(post)
-            }
-
-            buttonDeletePost.setOnClickListener {
-                onDeleteClick(post)
-            }
+            // ✅ Set listeners for edit & delete buttons
+            buttonEditPost.setOnClickListener { onEditClick(post) }
+            buttonDeletePost.setOnClickListener { onDeleteClick(post) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_post, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
         return PostViewHolder(view)
     }
 
