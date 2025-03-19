@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/nav_feed"
-        android:icon="@drawable/favourite_page"
-        android:title="Feed" />
+        android:id="@+id/menu_feed"
+    android:icon="@drawable/favourite_page"
+    android:title="Feed" />
 
     <item
-        android:id="@+id/nav_add"
-        android:icon="@drawable/add__1_"
-        android:iconTintMode="src_atop"
-        android:title="Add" />
+        android:id="@+id/menu_add"
+    android:icon="@drawable/add__1_"
+    android:iconTintMode="src_atop"
+    android:title="Add" />
 
     <item
-        android:id="@+id/nav_trending"
-        android:icon="@drawable/trend"
-        android:iconTintMode="src_atop"
-        android:title="Trending" />
+        android:id="@+id/menu_trending"
+    android:icon="@drawable/trend"
+    android:iconTintMode="src_atop"
+    android:title="Trending" />
 
 </menu>
