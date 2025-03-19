@@ -56,5 +56,9 @@ dependencies {
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
+    implementation(libs.picasso)
 }

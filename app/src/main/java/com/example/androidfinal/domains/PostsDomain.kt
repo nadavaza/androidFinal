@@ -1,6 +1,7 @@
 package com.example.androidfinal.domains
 
 import com.example.androidfinal.entities.Post
+import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.repositories.Post.LocalPostRepository
 import com.example.androidfinal.repositories.User.LocalUserRepository
@@ -34,10 +35,10 @@ class PostsDomain(private val localPostRepository: LocalPostRepository) {
         }
     }
 
-    fun getTrendingPosts(timePeriod: String, callback: (List<Post>) -> Unit) {
+    fun getTrendingPosts(timePeriod: String, callback: (List<TrendingPost>) -> Unit) {
         coroutineScope.launch {
-            val posts = localPostRepository.getTrendingPosts(timePeriod)
-            callback(posts)
+            val trendingPosts = localPostRepository.getTrendingPosts(timePeriod)
+            callback(trendingPosts)
         }
     }
 

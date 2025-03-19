@@ -2,6 +2,7 @@ package com.example.androidfinal.repositories.Post
 
 import android.content.Context
 import com.example.androidfinal.entities.Post
+import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.entities.dao.AppDatabase
 
@@ -12,7 +13,7 @@ class LocalPostRepository(context: Context) {
 
     suspend fun getPostsByUser(userId: Int): List<Post> = postDao.getPostsByUser(userId)
 
-    suspend fun getTrendingPosts(timePeriod: String): List<Post> {
+    suspend fun getTrendingPosts(timePeriod: String): List<TrendingPost> {
         val currentTime = System.currentTimeMillis()
 
         val startTime = when (timePeriod) {
