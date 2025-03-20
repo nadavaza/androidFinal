@@ -26,13 +26,19 @@ import com.squareup.picasso.Picasso
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
+    private val usersViewModel: UsersViewModel by activityViewModels()
+    private val postsViewModel: PostsViewModel by activityViewModels()
+
     private lateinit var userProfileImage: ImageView
     private lateinit var editUserName: EditText
     private lateinit var buttonSave: Button
     private lateinit var recyclerViewUserPosts: RecyclerView
     private lateinit var postAdapter: PostAdapter
-    private val usersViewModel: UsersViewModel by activityViewModels()
-    private val postsViewModel: PostsViewModel by activityViewModels()
+    private lateinit var editEpisodeTitle: EditText
+    private lateinit var editReview: EditText
+    private lateinit var ratingBar: RatingBar
+    private lateinit var postPhoto: ImageView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,7 +86,7 @@ class UserDetailsFragment : Fragment() {
         }
 
         userProfileImage.setOnClickListener {
-            openGallery()
+            openGallery(false)
         }
 
         buttonSave.setOnClickListener {
@@ -90,10 +96,11 @@ class UserDetailsFragment : Fragment() {
         recyclerViewUserPosts.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun openGallery() {
+    private fun openGallery(isUpdate: Boolean) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        val requestCode = if (isUpdate) POST_UPDATE_IMG_REQUEST else PICK_IMAGE_REQUEST
+        startActivityForResult(intent, requestCode)
     }
 
     private fun saveUserDetails() {
@@ -121,13 +128,28 @@ class UserDetailsFragment : Fragment() {
     private fun openEditPostDialog(post: Post) {
         val dialogView =
             LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_post, null)
-        val editEpisodeTitle = dialogView.findViewById<EditText>(R.id.editEpisodeTitle)
-        val editReview = dialogView.findViewById<EditText>(R.id.editReview)
-        val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
+        editEpisodeTitle = dialogView.findViewById(R.id.editEpisodeTitle)
+        editReview = dialogView.findViewById(R.id.editReview)
+        ratingBar = dialogView.findViewById(R.id.ratingBar)
+        postPhoto = dialogView.findViewById(R.id.imagePreview)
+
+        postPhoto.setOnClickListener {
+            openGallery(true)
+        }
 
         editEpisodeTitle.setText(post.title)
         editReview.setText(post.review)
         ratingBar.rating = post.rating.toFloat()
+        if (!post.photo.isNullOrEmpty()) {
+            Picasso.get()
+                .load(post.photo)
+                .placeholder(R.drawable.noanime)
+                .error(R.drawable.noanime)
+                .into(postPhoto)
+        } else {
+            postPhoto.setImageResource(android.R.drawable.ic_menu_gallery)
+        }
+
 
         AlertDialog.Builder(requireContext())
             .setTitle("Edit Post")
@@ -138,7 +160,11 @@ class UserDetailsFragment : Fragment() {
                     review = editReview.text.toString(),
                     rating = ratingBar.rating.toInt()
                 )
-                postsViewModel.updatePost(updatedPost)
+                var selectedBitmap: Bitmap? = null
+                userProfileImage.isDrawingCacheEnabled = true
+                userProfileImage.buildDrawingCache()
+                selectedBitmap = (userProfileImage.drawable as? BitmapDrawable)?.bitmap
+                postsViewModel.updatePost(updatedPost, selectedBitmap)
                 Toast.makeText(requireContext(), "Post updated!", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
@@ -155,10 +181,15 @@ class UserDetailsFragment : Fragment() {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             userProfileImage.setImageURI(data.data)
             userProfileImage.visibility = View.VISIBLE
+        } else if (requestCode == POST_UPDATE_IMG_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            postPhoto.setImageURI(data.data)
+            postPhoto.visibility = View.VISIBLE
         }
+
     }
 
     companion object {
         private const val PICK_IMAGE_REQUEST = 1
+        private const val POST_UPDATE_IMG_REQUEST = 2
     }
 }

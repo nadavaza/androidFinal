@@ -82,20 +82,22 @@ class PostsDomain(
         })
     }
 
-    fun updatePost(postId: String, updatedPost: Post, callback: (Boolean) -> Unit) {
-        coroutineScope.launch {
-            fireBasePostRepository.updatePost(postId, updatedPost) { success ->
-                if (success) {
-                    coroutineScope.launch {
-                        val updatedRows = localPostRepository.updatePost(updatedPost)
-                        callback(updatedRows > 0)
+    fun updatePost(postId: String, updatedPost: Post, photo: Bitmap?, callback: (Boolean) -> Unit) {
+        cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
+            val updatedPostWithPhoto = updatedPost.copy(photo = imageUrl)
+            coroutineScope.launch {
+                fireBasePostRepository.updatePost(postId, updatedPostWithPhoto) { success ->
+                    if (success) {
+                        coroutineScope.launch {
+                            localPostRepository.updatePost(updatedPostWithPhoto)
+                        }
                     }
+                    callback(success)
                 }
-                callback(success)
             }
-        }
-
-
+        }, onError = {
+            callback(false)
+        })
     }
 
     fun deletePost(post: Post, callback: (Boolean) -> Unit) {

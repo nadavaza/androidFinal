@@ -11,6 +11,7 @@ import com.example.androidfinal.entities.Post.Companion.fromJSON
 import com.example.androidfinal.entities.TrendingPost
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 
 class FireBasePostRepository {
 
@@ -100,12 +101,17 @@ class FireBasePostRepository {
     fun updatePost(postId: String, updatedPost: Post, callback: (Boolean) -> Unit) {
         fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH).whereEqualTo(POST_ID, postId)
             .get()
-            .addOnSuccessListener {
-                fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
-                    .document(it.documents[0].id)
-                    .update(updatedPost.json)
-                    .addOnSuccessListener { callback(true) }
-                    .addOnFailureListener { callback(false) }
+            .addOnSuccessListener { result ->
+                if (!result.isEmpty) {
+                    val documentId = result.documents[0].id
+                    fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
+                        .document(documentId)
+                        .set(updatedPost.json, SetOptions.merge())
+                        .addOnSuccessListener { callback(true) }
+                        .addOnFailureListener { callback(false) }
+                } else {
+                    callback(false)
+                }
             }
     }
 
