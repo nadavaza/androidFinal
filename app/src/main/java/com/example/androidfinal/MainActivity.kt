@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.androidfinal.viewModel.UsersViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,11 +49,14 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
             if (user != null && !user.photo.isNullOrEmpty()) {
-                profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
+                Picasso.get()
+                    .load(user.photo)
+                    .placeholder(R.drawable.noanime)
+                    .error(R.drawable.noanime)
+                    .into(profileImage)
             } else {
                 profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             }

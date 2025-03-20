@@ -1,5 +1,7 @@
 package com.example.androidfinal.domains
 
+import android.graphics.Bitmap
+import com.example.androidfinal.entities.CloudinaryModel
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.repositories.User.FireBaseUserRepository
 import com.google.firebase.auth.FirebaseUser
@@ -8,7 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class UsersDomain(private val fireBaseUserRepository: FireBaseUserRepository) {
+class UsersDomain(
+    private val fireBaseUserRepository: FireBaseUserRepository,
+    private val cloudinaryModel: CloudinaryModel
+) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -26,9 +31,14 @@ class UsersDomain(private val fireBaseUserRepository: FireBaseUserRepository) {
 
     fun registerUser(
         newUser: User,
+        photo: Bitmap?,
         callback: (User?) -> Unit
     ) {
-        fireBaseUserRepository.registerUser(newUser, callback)
+        cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
+            val updatedUser = newUser.copy(photo = imageUrl)
+            fireBaseUserRepository.registerUser(updatedUser, callback)
+        } , onError = {})
+
     }
 
     fun updateUser(userId: String, updatedUser: User, callback: (Boolean) -> Unit) {

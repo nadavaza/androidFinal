@@ -2,6 +2,8 @@ package com.example.androidfinal
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -48,6 +50,10 @@ class SignUpFragment : Fragment() {
             val email = editEmail.text.toString().trim()
             val password = editPassword.text.toString().trim()
             val name = editName.text.toString().trim()
+            var selectedBitmap: Bitmap? = null
+            profileImageView.isDrawingCacheEnabled = true
+            profileImageView.buildDrawingCache()
+            selectedBitmap = (profileImageView.drawable as? BitmapDrawable)?.bitmap
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 val user = User(
@@ -55,11 +61,11 @@ class SignUpFragment : Fragment() {
                     email = email,
                     password = password,
                     name = name,
-                    photo = selectedImageUri?.toString() ?: "", // Provide an empty string or a default profile picture URL
+                    photo = "", // Provide an empty string or a default profile picture URL
                     lastUpdated = System.currentTimeMillis()
                 )
 
-                usersViewModel.registerUser(user)
+                usersViewModel.registerUser(user, selectedBitmap)
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signUp_to_home)

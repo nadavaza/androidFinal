@@ -62,7 +62,7 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addPost(post: Post, photo: Bitmap, onComplete: () -> Unit) {
+    fun addPost(post: Post, photo: Bitmap?, onComplete: () -> Unit) {
         viewModelScope.launch {
             postDomain.addPost(post, photo) { success ->
                 if (success) {

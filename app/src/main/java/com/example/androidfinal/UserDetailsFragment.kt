@@ -20,6 +20,7 @@ import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.viewModel.PostsViewModel
 import com.example.androidfinal.viewModel.UsersViewModel
+import com.squareup.picasso.Picasso
 import java.io.IOException
 
 class UserDetailsFragment : Fragment() {
@@ -51,14 +52,27 @@ class UserDetailsFragment : Fragment() {
             if (currentUser != null) {
                 editUserName.setText(currentUser.name)
 
-                // Load user's profile picture
                 if (!currentUser.photo.isNullOrEmpty()) {
+                    Picasso.get()
+                        .load(currentUser.photo)
+                        .placeholder(R.drawable.noanime)
+                        .error(R.drawable.noanime)
+                        .into(userProfileImage)
+                } else {
                     userProfileImage.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
 
                 postsViewModel.getPostsByUser(currentUser.id)
                 postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
-                    postAdapter = PostAdapter(posts, usersViewModel, { post -> openEditPostDialog(post) }, { post -> onDeletePost(post) }, usersViewModel.currentUser.value, true, viewLifecycleOwner)
+                    postAdapter = PostAdapter(
+                        posts,
+                        usersViewModel,
+                        { post -> openEditPostDialog(post) },
+                        { post -> onDeletePost(post) },
+                        usersViewModel.currentUser.value,
+                        true,
+                        viewLifecycleOwner
+                    )
                     recyclerViewUserPosts.adapter = postAdapter
                 }
             }

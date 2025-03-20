@@ -12,7 +12,11 @@ import java.io.FileOutputStream
 
 class CloudinaryModel {
 
-    fun uploadBitmap(bitmap: Bitmap, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+    fun uploadBitmap(bitmap: Bitmap?, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+        if (bitmap == null) {
+            onSuccess("")
+            return
+        }
         val context = MyApplication.Globals.appContext ?: return
         val file = bitmapToFile(bitmap, context)
 
