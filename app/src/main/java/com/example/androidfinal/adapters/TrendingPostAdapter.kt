@@ -14,27 +14,28 @@ class TrendingPostAdapter(private val trendingPosts: List<TrendingPost>) :
     RecyclerView.Adapter<TrendingPostAdapter.TrendingPostViewHolder>() {
 
     class TrendingPostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textViewTitle: TextView = view.findViewById(R.id.textViewTrendingTitle)
-        private val textViewAvgRating: TextView = view.findViewById(R.id.textViewTrendingRating)
-        private val textViewPostCount: TextView = view.findViewById(R.id.textViewTrendingCount)
-        private val imageViewThumbnail: ImageView =
-            view.findViewById(R.id.imageViewTrendingThumbnail)
+        private val textViewEpisodeTitle: TextView = view.findViewById(R.id.textViewEpisodeTitle)
+        private val textViewRating: TextView = view.findViewById(R.id.textViewRating)
+        private val textViewPostCount: TextView = view.findViewById(R.id.textViewPostCount)
+        private val imageViewPhoto: ImageView = view.findViewById(R.id.imageViewPhoto)
 
         fun bind(trendingPost: TrendingPost) {
-            textViewTitle.text = trendingPost.title
-            textViewAvgRating.text = "⭐ ${roundToHalf(trendingPost.avgRating.toDouble())}/10 Avg"
-            textViewPostCount.text = "${trendingPost.postCount} Posts"
+            textViewEpisodeTitle.text = trendingPost.title
+            textViewRating.text = "⭐ ${roundToHalf(trendingPost.avgRating.toDouble())}/10"
+            textViewPostCount.text = "${trendingPost.postCount} reviews"
 
             if (!trendingPost.photo.isNullOrEmpty()) {
                 Picasso.get()
                     .load(trendingPost.photo)
                     .placeholder(R.drawable.noanime)
                     .error(R.drawable.noanime)
-                    .into(imageViewThumbnail)
+                    .into(imageViewPhoto)
+            } else {
+                imageViewPhoto.setImageResource(R.drawable.noanime)
             }
         }
 
-        // Function to round rating to nearest 0.5 or whole number
+        // ✅ Function to round rating to nearest 0.5 or whole number
         private fun roundToHalf(value: Double): String {
             val roundedValue = (Math.round(value * 2) / 2.0) // Ensure rounding to .0 or .5
             return if (roundedValue % 1.0 == 0.0) {
@@ -47,7 +48,7 @@ class TrendingPostAdapter(private val trendingPosts: List<TrendingPost>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrendingPostViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_trending_post, parent, false)
+            .inflate(R.layout.item_trending_post, parent, false) // ✅ Uses new layout
         return TrendingPostViewHolder(view)
     }
 
