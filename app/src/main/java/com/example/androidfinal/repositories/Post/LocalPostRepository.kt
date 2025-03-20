@@ -5,6 +5,9 @@ import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.entities.dao.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LocalPostRepository(context: Context) {
     private val postDao = AppDatabase.getDatabase(context).PostDao()
@@ -35,4 +38,11 @@ class LocalPostRepository(context: Context) {
     suspend fun updatePost(post: Post): Int = postDao.updatePost(post)
 
     suspend fun deletePost(post: Post) = postDao.deletePost(post)
+
+    fun clearAndInsert(firebasePosts: List<Post>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            postDao.clearAllPosts()
+            postDao.insertPosts(firebasePosts)
+        }
+    }
 }

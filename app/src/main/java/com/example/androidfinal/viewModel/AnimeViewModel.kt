@@ -25,8 +25,6 @@ class AnimeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getImageForTitle(title: String): String? {
-        println(_episodes.value)
-        println(title)
         return _episodes.value?.firstOrNull { it.title == title }?.photo
     }
 }

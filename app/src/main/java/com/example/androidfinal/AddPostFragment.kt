@@ -75,6 +75,7 @@ class AddPostFragment : Fragment() {
             if (episodeTitle.isNotEmpty() && review.isNotEmpty()) {
                 usersViewModel.currentUser.value?.let { currentUser ->
                     val newPost = Post(
+                        id = "",
                         userId = currentUser.id,
                         title = episodeTitle,
                         rating = rating,

@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
             if (user != null && !user.photo.isNullOrEmpty()) {

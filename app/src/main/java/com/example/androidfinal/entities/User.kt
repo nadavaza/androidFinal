@@ -9,8 +9,7 @@ import java.util.UUID
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey
-    var id: String = UUID.randomUUID().toString(),
+    @PrimaryKey val id: String,
     var name: String,
     val email: String,
     val password: String,
