@@ -5,10 +5,11 @@ import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.Post.Companion.LAST_UPDATED
 import com.example.androidfinal.entities.Post.Companion.POST_ID
 import com.example.androidfinal.entities.Post.Companion.RATING_KEY
-import com.example.androidfinal.entities.Post.Companion.TIMESTEMP_KEY
+import com.example.androidfinal.entities.Post.Companion.TIMESTAMP_KEY
 import com.example.androidfinal.entities.Post.Companion.USER_ID_KEY
 import com.example.androidfinal.entities.Post.Companion.fromJSON
 import com.example.androidfinal.entities.TrendingPost
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 
 class FireBasePostRepository {
@@ -17,7 +18,7 @@ class FireBasePostRepository {
 
     fun getAllPosts(lastUpdated: Long, callback: (List<Post>) -> Unit) {
         fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
-            .whereGreaterThanOrEqualTo(LAST_UPDATED, lastUpdated)
+            .whereGreaterThanOrEqualTo(LAST_UPDATED, Timestamp(lastUpdated / 1000, 0))
             .get()
             .addOnSuccessListener { result ->
                 val posts = result.documents.mapNotNull { doc ->
@@ -48,11 +49,18 @@ class FireBasePostRepository {
     }
 
     fun getTrendingPosts(startTime: String, callback: (List<TrendingPost>) -> Unit) {
-        val startTimeLong = startTime.toLongOrNull() ?: 0L
+        val currentTime = System.currentTimeMillis()
+
+        val startTimeLong = when (startTime) {
+            "week" -> currentTime - (7L * 24 * 60 * 60 * 1000)
+            "month" -> currentTime - (30L * 24 * 60 * 60 * 1000)
+            "year" -> currentTime - (365L * 24 * 60 * 60 * 1000)
+            else -> 0L
+        }
 
         fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
-            .whereGreaterThanOrEqualTo(TIMESTEMP_KEY, startTimeLong)
-            .orderBy(TIMESTEMP_KEY, Query.Direction.DESCENDING)
+            .whereGreaterThanOrEqualTo(TIMESTAMP_KEY, Timestamp(startTimeLong / 1000, 0))
+            .orderBy(TIMESTAMP_KEY, Query.Direction.DESCENDING)
             .orderBy(RATING_KEY, Query.Direction.DESCENDING)
             .limit(50)
             .get()

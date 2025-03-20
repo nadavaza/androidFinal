@@ -2,6 +2,8 @@ package com.example.androidfinal
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,8 +31,6 @@ class AddPostFragment : Fragment() {
     private lateinit var buttonSubmit: Button
     private lateinit var buttonChooseImage: Button
     private lateinit var imageViewPreview: ImageView
-
-    private var selectedImageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +70,10 @@ class AddPostFragment : Fragment() {
             val episodeTitle = spinnerEpisodeTitle.selectedItem?.toString() ?: ""
             val review = editTextReview.text.toString()
             val rating = ratingBar.rating.toInt()
-            val imageUri = selectedImageUri?.toString() ?: ""
+            var selectedBitmap: Bitmap? = null
+            imageViewPreview.isDrawingCacheEnabled = true
+            imageViewPreview.buildDrawingCache()
+            selectedBitmap = (imageViewPreview.drawable as BitmapDrawable).bitmap
 
             if (episodeTitle.isNotEmpty() && review.isNotEmpty()) {
                 usersViewModel.currentUser.value?.let { currentUser ->
@@ -80,10 +83,10 @@ class AddPostFragment : Fragment() {
                         title = episodeTitle,
                         rating = rating,
                         review = review,
-                        photo = imageUri
+                        photo = ""
                     )
 
-                    postsViewModel.addPost(newPost) {
+                    postsViewModel.addPost(newPost , selectedBitmap) {
                         requireActivity().runOnUiThread {
                             findNavController().navigate(R.id.nav_feed)
                         }
@@ -105,8 +108,7 @@ class AddPostFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            selectedImageUri = data.data
-            imageViewPreview.setImageURI(selectedImageUri)
+            imageViewPreview.setImageURI(data.data)
             imageViewPreview.visibility = View.VISIBLE
         }
     }

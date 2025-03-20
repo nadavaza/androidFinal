@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal.domains.UsersDomain
+import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.entities.dao.AppDatabase
 import com.example.androidfinal.repositories.User.FireBaseUserRepository
@@ -27,6 +28,7 @@ class UsersViewModel(application: Application) : AndroidViewModel(application) {
     fun login(email: String, password: String) {
         usersDomain.login(email, password) { logged ->
             if (logged != null) {
+                Post.lastUpdated = 0
                 usersDomain.getUser { user -> _currentUser.postValue(user) }
             }
         }

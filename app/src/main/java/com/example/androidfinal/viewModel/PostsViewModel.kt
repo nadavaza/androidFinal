@@ -1,23 +1,29 @@
 package com.example.androidfinal.viewModel
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.provider.ContactsContract.CommonDataKinds.Photo
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.androidfinal.domains.PostsDomain
+import com.example.androidfinal.entities.CloudinaryModel
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.repositories.Post.FireBasePostRepository
 import com.example.androidfinal.repositories.Post.LocalPostRepository
 //import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val localPostRepository = LocalPostRepository(application)
     private val fireBasePostRepository = FireBasePostRepository()
-    private val postDomain = PostsDomain(localPostRepository, fireBasePostRepository)
+    private val cloudinaryModel = CloudinaryModel()
+    private val postDomain =
+        PostsDomain(localPostRepository, fireBasePostRepository, cloudinaryModel)
 
     private val animeViewModel = AnimeViewModel(application)
 
@@ -27,14 +33,10 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
     private val _trendingPosts = MutableLiveData<List<TrendingPost>>()
     val trendingPosts: LiveData<List<TrendingPost>> get() = _trendingPosts
 
-
-    init {
-        getAllPosts()
-    }
-
     fun getAllPosts() {
         viewModelScope.launch {
             postDomain.getAllPosts(Post.lastUpdated) { postList ->
+                Post.lastUpdated = Instant.now().epochSecond
                 _posts.postValue(postList)
             }
         }
@@ -42,7 +44,9 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
-            postDomain.getPostsByUser(userId) { posts -> _posts.postValue(posts) }
+            postDomain.getPostsByUser(userId) { posts ->
+                _posts.postValue(posts)
+            }
         }
     }
 
@@ -58,9 +62,9 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addPost(post: Post, onComplete: () -> Unit) {
+    fun addPost(post: Post, photo: Bitmap, onComplete: () -> Unit) {
         viewModelScope.launch {
-            postDomain.addPost(post) { success ->
+            postDomain.addPost(post, photo) { success ->
                 if (success) {
                     getAllPosts()
                     onComplete()
