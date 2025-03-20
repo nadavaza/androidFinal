@@ -80,7 +80,8 @@ data class Post(
                 TITLE_KEY to title,
                 REVIEW_KEY to review,
                 RATING_KEY to rating,
-                PHOTO_KEY to PHOTO_KEY,
+                PHOTO_KEY to photo,
+                TIMESTAMP_KEY to timestamp,
                 LAST_UPDATED to FieldValue.serverTimestamp()
             )
         }

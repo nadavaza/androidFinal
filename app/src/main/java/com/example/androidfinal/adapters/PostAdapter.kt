@@ -15,6 +15,7 @@ import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.utils.DateUtils
 import com.example.androidfinal.viewModel.UsersViewModel
+import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private val posts: List<Post>,
@@ -46,9 +47,10 @@ class PostAdapter(
             lifecycleOwner: LifecycleOwner
         ) {
             // ✅ Fetch username dynamically
-            usersViewModel.getUserById(post.userId).observe(lifecycleOwner, Observer { fetchedUser ->
-                textViewUsername.text = fetchedUser?.name ?: "Unknown User"
-            })
+            usersViewModel.getUserById(post.userId)
+                .observe(lifecycleOwner, Observer { fetchedUser ->
+                    textViewUsername.text = fetchedUser?.name ?: "Unknown User"
+                })
 
             // ✅ Properly format long episode titles
             textViewEpisodeTitle.text = if (post.title.length > 25) {
@@ -61,12 +63,14 @@ class PostAdapter(
             textViewRating.text = "⭐ ${post.rating}/10"
             textViewTimeStamp.text = DateUtils.formatTimestamp(post.timestamp)
 
-            // ✅ Properly load the post image
             if (!post.photo.isNullOrEmpty()) {
-                val imageUri = Uri.parse(post.photo)
-                imageViewPhoto.setImageResource(R.drawable.noanime)
+                Picasso.get()
+                    .load(post.photo)
+                    .placeholder(R.drawable.noanime)
+                    .error(R.drawable.noanime)
+                    .into(imageViewPhoto)
             } else {
-                imageViewPhoto.setImageResource(R.drawable.noanime) // Default placeholder
+                imageViewPhoto.setImageResource(R.drawable.noanime)
             }
 
             // ✅ Show edit & delete buttons only if the post belongs to the current user
@@ -90,7 +94,15 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position], usersViewModel, onEditClick, onDeleteClick, user, isProfileScreen, lifecycleOwner)
+        holder.bind(
+            posts[position],
+            usersViewModel,
+            onEditClick,
+            onDeleteClick,
+            user,
+            isProfileScreen,
+            lifecycleOwner
+        )
     }
 
     override fun getItemCount() = posts.size
