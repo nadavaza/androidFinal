@@ -37,12 +37,15 @@ class UsersDomain(
         cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
             val updatedUser = newUser.copy(photo = imageUrl)
             fireBaseUserRepository.registerUser(updatedUser, callback)
-        } , onError = {})
+        }, onError = {})
 
     }
 
-    fun updateUser(userId: String, updatedUser: User, callback: (Boolean) -> Unit) {
-        fireBaseUserRepository.updateUser(userId, updatedUser, callback)
+    fun updateUser(userId: String, updatedUser: User, photo: Bitmap?, callback: (Boolean) -> Unit) {
+        cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
+            val updatedUserPhoto = updatedUser.copy(photo = imageUrl)
+            fireBaseUserRepository.updateUser(userId, updatedUserPhoto, callback)
+        }, onError = {})
     }
 
     fun logout() {
