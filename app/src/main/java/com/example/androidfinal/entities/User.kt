@@ -28,12 +28,12 @@ data class User(
         var lastUpdated: Long
             get() {
                 return MyApplication.Globals
-                    .context?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    .appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
                     ?.getLong(GET_LAST_UPDATED, 0) ?: 0
             }
             set(value) {
                 MyApplication.Globals
-                    ?.context
+                    ?.appContext
                     ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.edit()
                     ?.putLong(GET_LAST_UPDATED, value)?.apply()
             }

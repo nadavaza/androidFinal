@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+cloudinaryAndroid = "3.0.2"
 gson = "2.11.0"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -20,10 +21,12 @@ navigationUiKtx = "2.8.9"
 googleServices = "4.4.2"
 firebaseCommonKtx = "21.0.0"
 firebaseBom = "33.7.0"
+firebaseDataconnect = "16.0.0-beta04"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -48,6 +51,7 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage"}
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
+firebase-dataconnect = { group = "com.google.firebase", name = "firebase-dataconnect", version.ref = "firebaseDataconnect" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

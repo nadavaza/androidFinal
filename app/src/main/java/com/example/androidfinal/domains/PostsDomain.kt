@@ -1,5 +1,7 @@
 package com.example.androidfinal.domains
 
+import android.graphics.Bitmap
+import com.example.androidfinal.entities.CloudinaryModel
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.TrendingPost
 import com.example.androidfinal.repositories.Post.FireBasePostRepository
@@ -11,20 +13,10 @@ import kotlinx.coroutines.launch
 
 class PostsDomain(
     private val localPostRepository: LocalPostRepository,
-    private val fireBasePostRepository: FireBasePostRepository
+    private val fireBasePostRepository: FireBasePostRepository,
+    private val cloudinaryModel: CloudinaryModel
 ) {
-
     private val coroutineScope = CoroutineScope(Dispatchers.IO + Job())
-
-    fun addPost(post: Post, callback: (Boolean) -> Unit) {
-        coroutineScope.launch {
-            localPostRepository.insertPost(post)
-            fireBasePostRepository.insertPost(post) { success ->
-                callback(success)
-            }
-        }
-    }
-
     fun getAllPosts(lastUpdated: Long, callback: (List<Post>) -> Unit) {
         coroutineScope.launch {
             fireBasePostRepository.getAllPosts(lastUpdated) { firebasePosts ->
@@ -68,6 +60,24 @@ class PostsDomain(
                 }
             }
         }
+    }
+
+    fun addPost(post: Post, photo: Bitmap, callback: (Boolean) -> Unit) {
+        cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
+            val updatedPost = post.copy(photo = imageUrl)
+            coroutineScope.launch {
+                fireBasePostRepository.insertPost(updatedPost) { success ->
+                    if (success) {
+                        coroutineScope.launch {
+                            localPostRepository.insertPost(updatedPost)
+                        }
+                    }
+                    callback(success)
+                }
+            }
+        }, onError = {
+            callback(false)
+        })
     }
 
     fun updatePost(postId: String, updatedPost: Post, callback: (Boolean) -> Unit) {
