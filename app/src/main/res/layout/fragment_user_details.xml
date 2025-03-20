@@ -7,9 +7,7 @@
     android:padding="16dp"
     android:background="@drawable/gradient_background">
 
-    <!-- Back Button -->
 
-    <!-- Profile Picture (Clickable to Change) -->
     <ImageView
         android:id="@+id/userProfileImage"
         android:layout_width="100dp"
@@ -24,7 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="88dp" />
 
-    <!-- Edit Name -->
     <EditText
         android:id="@+id/editUserName"
         android:layout_width="match_parent"
@@ -37,7 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="match_parent"
@@ -50,7 +46,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- RecyclerView for User's Posts -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewUserPosts"
         android:layout_width="match_parent"

@@ -6,7 +6,6 @@
     android:background="@drawable/gradient_background"
     android:padding="24dp">
 
-    <!-- Sign In Title -->
     <TextView
         android:id="@+id/signInTitle"
         android:layout_width="wrap_content"
@@ -20,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"/>
 
-    <!-- Email Input -->
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="match_parent"
@@ -35,7 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Password Input -->
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="match_parent"
@@ -50,7 +47,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
 
-    <!-- Login Button -->
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
@@ -65,7 +61,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Don't Have an Account? Sign Up -->
     <TextView
         android:id="@+id/textNoAccount"
         android:layout_width="wrap_content"

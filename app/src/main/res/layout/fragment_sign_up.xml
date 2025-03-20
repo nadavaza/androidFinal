@@ -7,7 +7,6 @@
     android:background="@drawable/gradient_background"
     android:padding="24dp">
 
-    <!-- Sign Up Title -->
     <TextView
         android:id="@+id/signUpTitle"
         android:layout_width="wrap_content"
@@ -21,7 +20,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"/>
 
-    <!-- Profile Image Preview -->
     <ImageView
         android:id="@+id/profileImageView"
         android:layout_width="100dp"
@@ -36,7 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Choose Profile Image Button -->
     <Button
         android:id="@+id/buttonChooseProfileImage"
         android:layout_width="wrap_content"
@@ -52,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="15dp"/>
 
-    <!-- Email Input -->
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="match_parent"
@@ -67,7 +63,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Name Input -->
     <EditText
         android:id="@+id/editName"
         android:layout_width="match_parent"
@@ -82,7 +77,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
 
-    <!-- Password Input -->
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="match_parent"
@@ -97,7 +91,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
 
-    <!-- Sign Up Button -->
     <Button
         android:id="@+id/buttonSignUp"
         android:layout_width="match_parent"
@@ -112,7 +105,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Already Have an Account? Sign In -->
     <TextView
         android:id="@+id/textHaveAccount"
         android:layout_width="wrap_content"

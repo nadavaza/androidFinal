@@ -48,12 +48,10 @@ class SignUpFragment : Fragment() {
         profileImageView = view.findViewById(R.id.profileImageView)
         textHaveAccount = view.findViewById(R.id.textHaveAccount)
 
-        // Handle selecting a profile image
         buttonChooseProfileImage.setOnClickListener {
             openGallery()
         }
 
-        // Handle sign-up logic
         buttonSignUp.setOnClickListener {
             val email = editEmail.text.toString().trim()
             val password = editPassword.text.toString().trim()
@@ -65,11 +63,11 @@ class SignUpFragment : Fragment() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 val user = User(
-                    id = "", // Provide a default empty string or generate a unique ID
+                    id = "",
                     email = email,
                     password = password,
                     name = name,
-                    photo = "", // Provide an empty string or a default profile picture URL
+                    photo = "",
                     lastUpdated = System.currentTimeMillis()
                 )
 

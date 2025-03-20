@@ -39,10 +39,8 @@ class TrendingFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewTrending)
         spinnerFilter = view.findViewById(R.id.spinnerFilter)
 
-        // Set up RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Set up Spinner (Dropdown Menu) for Time Filter
         val timeFrames = arrayOf("This Week", "Month", "Year", "All Time")
         val spinnerAdapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timeFrames)
@@ -51,7 +49,6 @@ class TrendingFragment : Fragment() {
 
         applyFilter("This Week")
 
-        // Handle filter selection
         spinnerFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

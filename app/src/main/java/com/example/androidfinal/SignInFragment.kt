@@ -58,7 +58,6 @@ class SignInFragment : Fragment() {
             }
         }
 
-        // ✅ Navigate to Sign Up page when clicked
         textNoAccount.setOnClickListener {
             findNavController().navigate(R.id.action_signIn_to_signUp)
         }

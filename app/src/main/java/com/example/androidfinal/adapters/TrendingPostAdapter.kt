@@ -35,20 +35,19 @@ class TrendingPostAdapter(private val trendingPosts: List<TrendingPost>) :
             }
         }
 
-        // ✅ Function to round rating to nearest 0.5 or whole number
         private fun roundToHalf(value: Double): String {
-            val roundedValue = (Math.round(value * 2) / 2.0) // Ensure rounding to .0 or .5
+            val roundedValue = (Math.round(value * 2) / 2.0)
             return if (roundedValue % 1.0 == 0.0) {
-                String.format("%.0f", roundedValue) // Whole number (e.g., 4)
+                String.format("%.0f", roundedValue)
             } else {
-                String.format("%.1f", roundedValue) // Half number (e.g., 4.5)
+                String.format("%.1f", roundedValue)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrendingPostViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_trending_post, parent, false) // ✅ Uses new layout
+            .inflate(R.layout.item_trending_post, parent, false) 
         return TrendingPostViewHolder(view)
     }
 

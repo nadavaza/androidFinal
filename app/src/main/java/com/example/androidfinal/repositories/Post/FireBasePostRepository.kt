@@ -73,7 +73,7 @@ class FireBasePostRepository {
                     .map { (title, postList) ->
                         val postCount = postList.size
                         val avgRating = postList.map { it.rating }.average().toFloat()
-                        val photo = postList.firstOrNull()?.photo ?: "" // Get first image
+                        val photo = postList.firstOrNull()?.photo ?: ""
 
                         TrendingPost(
                             title = title,
@@ -82,12 +82,12 @@ class FireBasePostRepository {
                             photo = photo
                         )
                     }
-                    .sortedByDescending { it.avgRating } // Sort by avg rating
+                    .sortedByDescending { it.avgRating }
 
                 callback(trendingPosts)
             }
             .addOnFailureListener {
-                callback(emptyList()) // Return empty list on failure
+                callback(emptyList())
             }
     }
 
