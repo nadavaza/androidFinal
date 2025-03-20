@@ -59,7 +59,7 @@ class FireBasePostRepository {
         }
 
         fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
-            .whereGreaterThanOrEqualTo(TIMESTAMP_KEY, Timestamp(startTimeLong / 1000, 0))
+            .whereGreaterThanOrEqualTo(TIMESTAMP_KEY, startTimeLong)
             .orderBy(TIMESTAMP_KEY, Query.Direction.DESCENDING)
             .orderBy(RATING_KEY, Query.Direction.DESCENDING)
             .limit(50)
@@ -87,8 +87,7 @@ class FireBasePostRepository {
 
                 callback(trendingPosts)
             }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
+            .addOnFailureListener {
                 callback(emptyList())
             }
     }

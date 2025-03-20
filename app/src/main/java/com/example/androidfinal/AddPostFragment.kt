@@ -115,6 +115,6 @@ class AddPostFragment : Fragment() {
     }
 
     companion object {
-        private const val PICK_IMAGE_REQUEST = 100
+        const val PICK_IMAGE_REQUEST = 100
     }
 }
