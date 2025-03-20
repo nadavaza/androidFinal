@@ -46,6 +46,7 @@
         android:background="@drawable/circle_background"
         android:clickable="true"
         android:focusable="true"
+        android:clipToOutline="true"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_gallery"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
