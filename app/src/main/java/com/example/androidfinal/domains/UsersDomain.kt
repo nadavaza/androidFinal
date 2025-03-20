@@ -16,6 +16,10 @@ class UsersDomain(private val fireBaseUserRepository: FireBaseUserRepository) {
         fireBaseUserRepository.getUser(callback)
     }
 
+    fun getUserById(userId: String, callback: (User?) -> Unit) {
+        fireBaseUserRepository.getUserById(userId, callback)
+    }
+
     fun login(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
         fireBaseUserRepository.login(email, password, callback)
     }

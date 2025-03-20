@@ -34,6 +34,18 @@ class FireBaseUserRepository {
             }
     }
 
+    fun getUserById(userId: String, callback: (User?) -> Unit) {
+        fireBase.db.collection(FireBaseModel.USERS_COLLECTION_PATH)
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                callback(document.data?.let { fromJSON(it) }) // Convert Firestore data to User
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
+    }
+
     fun login(
         email: String,
         password: String,

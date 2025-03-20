@@ -41,6 +41,16 @@ class UsersViewModel(application: Application) : AndroidViewModel(application) {
         usersDomain.getUser { user -> _currentUser.postValue(user) }
     }
 
+    fun getUserById(userId: String): LiveData<User?> {
+        val userLiveData = MutableLiveData<User?>()
+
+        usersDomain.getUserById(userId) { user ->
+            userLiveData.postValue(user)
+        }
+
+        return userLiveData
+    }
+
     fun updateUser(updatedUser: User) {
         val current = _currentUser.value
         if (current != null) {

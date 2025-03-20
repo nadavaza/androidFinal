@@ -7,19 +7,23 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidfinal.R
 import com.example.androidfinal.entities.Post
 import com.example.androidfinal.entities.User
 import com.example.androidfinal.utils.DateUtils
-import com.squareup.picasso.Picasso
+import com.example.androidfinal.viewModel.UsersViewModel
 
 class PostAdapter(
     private val posts: List<Post>,
+    private val usersViewModel: UsersViewModel, // ✅ Inject UsersViewModel
     private val onEditClick: (Post) -> Unit,
     private val onDeleteClick: (Post) -> Unit,
     private val user: User?,
-    private val isProfileScreen: Boolean
+    private val isProfileScreen: Boolean,
+    private val lifecycleOwner: LifecycleOwner // ✅ Needed for LiveData observation
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,14 +38,19 @@ class PostAdapter(
 
         fun bind(
             post: Post,
+            usersViewModel: UsersViewModel,
             onEditClick: (Post) -> Unit,
             onDeleteClick: (Post) -> Unit,
             user: User?,
-            isProfileScreen: Boolean
+            isProfileScreen: Boolean,
+            lifecycleOwner: LifecycleOwner
         ) {
-            // ✅ Display the correct username (fetch dynamically if needed)
-            textViewUsername.text = user?.name ?: "Unknown User"
+            // ✅ Fetch username dynamically
+            usersViewModel.getUserById(post.userId).observe(lifecycleOwner, Observer { fetchedUser ->
+                textViewUsername.text = fetchedUser?.name ?: "Unknown User"
+            })
 
+            // ✅ Properly format long episode titles
             textViewEpisodeTitle.text = if (post.title.length > 25) {
                 "${post.title.substring(0, 25)}..."
             } else {
@@ -52,18 +61,12 @@ class PostAdapter(
             textViewRating.text = "⭐ ${post.rating}/10"
             textViewTimeStamp.text = DateUtils.formatTimestamp(post.timestamp)
 
-
+            // ✅ Properly load the post image
             if (!post.photo.isNullOrEmpty()) {
                 val imageUri = Uri.parse(post.photo)
-
-                try {
-                    // ✅ Try setting image directly (works for local images)
-                    imageViewPhoto.setImageResource(android.R.drawable.ic_menu_gallery)
-                } catch (e: Exception) {
-                    imageViewPhoto.setImageResource(R.drawable.noanime)
-                }
+                imageViewPhoto.setImageURI(imageUri)
             } else {
-                imageViewPhoto.setImageResource(R.drawable.noanime)
+                imageViewPhoto.setImageResource(R.drawable.noanime) // Default placeholder
             }
 
             // ✅ Show edit & delete buttons only if the post belongs to the current user
@@ -86,7 +89,7 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position], onEditClick, onDeleteClick, user, isProfileScreen)
+        holder.bind(posts[position], usersViewModel, onEditClick, onDeleteClick, user, isProfileScreen, lifecycleOwner)
     }
 
     override fun getItemCount() = posts.size

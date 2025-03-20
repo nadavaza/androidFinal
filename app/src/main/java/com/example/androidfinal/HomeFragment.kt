@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         postsViewModel.getAllPosts()
         postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
-            postAdapter = PostAdapter(posts, {}, {}, usersViewModel.currentUser.value, false)
+            postAdapter = PostAdapter(posts, usersViewModel, {}, {}, usersViewModel.currentUser.value, false, viewLifecycleOwner)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = postAdapter
         }
