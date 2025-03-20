@@ -6,7 +6,7 @@ import java.util.Locale
 
 object DateUtils {
     fun formatTimestamp(timestamp: Long): String {
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // ✅ Format: dd/MM/yyyy
-        return sdf.format(Date(timestamp)) // ✅ Convert to Date and format
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return sdf.format(Date(timestamp))
     }
 }

@@ -19,12 +19,12 @@ import com.squareup.picasso.Picasso
 
 class PostAdapter(
     private val posts: List<Post>,
-    private val usersViewModel: UsersViewModel, // ✅ Inject UsersViewModel
+    private val usersViewModel: UsersViewModel,
     private val onEditClick: (Post) -> Unit,
     private val onDeleteClick: (Post) -> Unit,
     private val user: User?,
     private val isProfileScreen: Boolean,
-    private val lifecycleOwner: LifecycleOwner // ✅ Needed for LiveData observation
+    private val lifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,13 +46,11 @@ class PostAdapter(
             isProfileScreen: Boolean,
             lifecycleOwner: LifecycleOwner
         ) {
-            // ✅ Fetch username dynamically
             usersViewModel.getUserById(post.userId)
                 .observe(lifecycleOwner, Observer { fetchedUser ->
                     textViewUsername.text = fetchedUser?.name ?: "Unknown User"
                 })
 
-            // ✅ Properly format long episode titles
             textViewEpisodeTitle.text = if (post.title.length > 25) {
                 "${post.title.substring(0, 25)}..."
             } else {
@@ -73,7 +71,6 @@ class PostAdapter(
                 imageViewPhoto.setImageResource(R.drawable.noanime)
             }
 
-            // ✅ Show edit & delete buttons only if the post belongs to the current user
             if (post.userId == user?.id && isProfileScreen) {
                 buttonEditPost.visibility = View.VISIBLE
                 buttonDeletePost.visibility = View.VISIBLE
@@ -82,7 +79,6 @@ class PostAdapter(
                 buttonDeletePost.visibility = View.GONE
             }
 
-            // ✅ Set listeners for edit & delete buttons
             buttonEditPost.setOnClickListener { onEditClick(post) }
             buttonDeletePost.setOnClickListener { onDeleteClick(post) }
         }

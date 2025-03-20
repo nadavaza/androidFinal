@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:background="@drawable/gradient_background">
 
-    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -22,7 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="100dp"/>
 
-    <!-- Sign In Button -->
     <Button
         android:id="@+id/buttonSignIn"
         android:layout_width="250dp"
@@ -37,7 +35,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"/>
 
-    <!-- Sign Up Button -->
     <Button
         android:id="@+id/buttonSignUp"
         android:layout_width="250dp"

@@ -60,14 +60,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Fix: Reset profile picture on logout
+
         buttonSignOut.setOnClickListener {
             usersViewModel.logout()
 
-            // Reset profile picture to default
             profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
 
-            // Navigate to Welcome Screen
             navController.navigate(R.id.welcomeFragment)
         }
 
@@ -75,7 +73,6 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.userDetailsFragment)
         }
 
-        // ✅ Fix: Ensure bottom navigation works correctly
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_feed -> navController.navigate(R.id.nav_feed)

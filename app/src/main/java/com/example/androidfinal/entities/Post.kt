@@ -12,10 +12,10 @@ import java.util.UUID
 @Entity(tableName = "posts")
 data class Post(
     @PrimaryKey var id: String = UUID.randomUUID().toString(),
-    val userId: String, // Foreign Key to User
+    val userId: String,
     val title: String,
     val review: String,
-    val rating: Int, // 1-10 rating
+    val rating: Int,
     val photo: String,
     val timestamp: Long = System.currentTimeMillis(),
     var lastUpdated: Long? = null

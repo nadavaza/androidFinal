@@ -27,7 +27,7 @@ class FireBaseUserRepository {
             .document(firebaseUser.uid)
             .get()
             .addOnSuccessListener { document ->
-                callback(document.data?.let { fromJSON(it) }) // Convert Firestore data to User
+                callback(document.data?.let { fromJSON(it) })
             }
             .addOnFailureListener {
                 callback(null)
@@ -39,7 +39,7 @@ class FireBaseUserRepository {
             .document(userId)
             .get()
             .addOnSuccessListener { document ->
-                callback(document.data?.let { fromJSON(it) }) // Convert Firestore data to User
+                callback(document.data?.let { fromJSON(it) })
             }
             .addOnFailureListener {
                 callback(null)
