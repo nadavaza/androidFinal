@@ -7,10 +7,11 @@ import androidx.room.PrimaryKey
 import com.example.androidfinal.base.MyApplication
 import com.example.androidfinal.entities.User.Companion.ID_KEY
 import com.google.firebase.firestore.FieldValue
+import java.util.UUID
 
 @Entity(tableName = "posts")
 data class Post(
-    @PrimaryKey val id: String,
+    @PrimaryKey var id: String = UUID.randomUUID().toString(),
     val userId: String, // Foreign Key to User
     val title: String,
     val review: String,

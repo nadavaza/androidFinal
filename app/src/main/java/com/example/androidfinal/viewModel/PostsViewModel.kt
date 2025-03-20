@@ -73,9 +73,9 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updatePost(post: Post) {
+    fun updatePost(post: Post , photo: Bitmap?) {
         viewModelScope.launch {
-            postDomain.updatePost(post.id, post) { success ->
+            postDomain.updatePost(post.id, post , photo) { success ->
                 if (success) getPostsByUser(post.userId)
             }
         }
