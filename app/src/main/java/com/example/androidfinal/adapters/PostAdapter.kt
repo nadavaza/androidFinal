@@ -64,7 +64,7 @@ class PostAdapter(
             // ✅ Properly load the post image
             if (!post.photo.isNullOrEmpty()) {
                 val imageUri = Uri.parse(post.photo)
-                imageViewPhoto.setImageURI(imageUri)
+                imageViewPhoto.setImageResource(R.drawable.noanime)
             } else {
                 imageViewPhoto.setImageResource(R.drawable.noanime) // Default placeholder
             }
