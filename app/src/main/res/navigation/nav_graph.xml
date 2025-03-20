@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_signIn_to_home"
             app:destination="@id/nav_feed"/>
+        <action
+            android:id="@+id/action_signIn_to_signUp"
+            app:destination="@id/signUpFragment"/> <!-- ✅ Added action to Sign Up -->
     </fragment>
 
     <!-- Sign Up Screen -->
