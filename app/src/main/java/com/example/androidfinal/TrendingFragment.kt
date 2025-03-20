@@ -19,12 +19,12 @@ import com.example.androidfinal.viewModel.UsersViewModel
 
 class TrendingFragment : Fragment() {
 
+    private val postsViewModel: PostsViewModel by activityViewModels()
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var TrendingPostAdapter: TrendingPostAdapter
     private lateinit var spinnerFilter: Spinner
-    private var filteredPosts = mutableListOf<Post>()
-    private val postsViewModel: PostsViewModel by activityViewModels()
-    private val usersViewModel: UsersViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

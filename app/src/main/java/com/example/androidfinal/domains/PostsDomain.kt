@@ -51,18 +51,20 @@ class PostsDomain(
 
     fun getTrendingPosts(timePeriod: String, callback: (List<TrendingPost>) -> Unit) {
         coroutineScope.launch {
-            val cachedTrendingPosts = localPostRepository.getTrendingPosts(timePeriod)
-            callback(cachedTrendingPosts)
-
             fireBasePostRepository.getTrendingPosts(timePeriod) { firebaseTrendingPosts ->
                 if (firebaseTrendingPosts.isNotEmpty()) {
                     callback(firebaseTrendingPosts)
+                } else {
+                    coroutineScope.launch {
+                        val cachedTrendingPosts = localPostRepository.getTrendingPosts(timePeriod)
+                        callback(cachedTrendingPosts)
+                    }
                 }
             }
         }
     }
 
-    fun addPost(post: Post, photo: Bitmap, callback: (Boolean) -> Unit) {
+    fun addPost(post: Post, photo: Bitmap?, callback: (Boolean) -> Unit) {
         cloudinaryModel.uploadBitmap(photo, onSuccess = { imageUrl ->
             val updatedPost = post.copy(photo = imageUrl)
             coroutineScope.launch {

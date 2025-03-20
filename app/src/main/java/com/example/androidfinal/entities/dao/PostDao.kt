@@ -30,7 +30,7 @@ interface PostDao {
     LIMIT 50
 """
     )
-    fun getTrendingPosts(startTime: Long): List<TrendingPost>
+    suspend fun getTrendingPosts(startTime: Long): List<TrendingPost>
 
     @Query(
         """

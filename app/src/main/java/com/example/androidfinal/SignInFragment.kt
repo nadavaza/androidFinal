@@ -17,6 +17,12 @@ class SignInFragment : Fragment() {
 
     private val usersViewModel: UsersViewModel by activityViewModels()
 
+    private lateinit var signInTitle: TextView
+    private lateinit var editEmail: EditText
+    private lateinit var editPassword: EditText
+    private lateinit var buttonLogin: Button
+    private lateinit var textNoAccount: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,11 +33,11 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val signInTitle = view.findViewById<TextView>(R.id.signInTitle) // ✅ Added Title
-        val editEmail = view.findViewById<EditText>(R.id.editEmail)
-        val editPassword = view.findViewById<EditText>(R.id.editPassword)
-        val buttonLogin = view.findViewById<Button>(R.id.buttonLogin)
-        val textNoAccount = view.findViewById<TextView>(R.id.textNoAccount)
+        signInTitle = view.findViewById(R.id.signInTitle)
+        editEmail = view.findViewById(R.id.editEmail)
+        editPassword = view.findViewById(R.id.editPassword)
+        buttonLogin = view.findViewById(R.id.buttonLogin)
+        textNoAccount = view.findViewById(R.id.textNoAccount)
 
         buttonLogin.setOnClickListener {
             val email = editEmail.text.toString().trim()
@@ -47,7 +53,8 @@ class SignInFragment : Fragment() {
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 

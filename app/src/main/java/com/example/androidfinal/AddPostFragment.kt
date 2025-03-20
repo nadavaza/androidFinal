@@ -73,7 +73,8 @@ class AddPostFragment : Fragment() {
             var selectedBitmap: Bitmap? = null
             imageViewPreview.isDrawingCacheEnabled = true
             imageViewPreview.buildDrawingCache()
-            selectedBitmap = (imageViewPreview.drawable as BitmapDrawable).bitmap
+            selectedBitmap = (imageViewPreview.drawable as? BitmapDrawable)?.bitmap
+
 
             if (episodeTitle.isNotEmpty() && review.isNotEmpty()) {
                 usersViewModel.currentUser.value?.let { currentUser ->
@@ -86,7 +87,7 @@ class AddPostFragment : Fragment() {
                         photo = ""
                     )
 
-                    postsViewModel.addPost(newPost , selectedBitmap) {
+                    postsViewModel.addPost(newPost, selectedBitmap) {
                         requireActivity().runOnUiThread {
                             findNavController().navigate(R.id.nav_feed)
                         }
@@ -114,6 +115,6 @@ class AddPostFragment : Fragment() {
     }
 
     companion object {
-        private const val PICK_IMAGE_REQUEST = 100
+        const val PICK_IMAGE_REQUEST = 100
     }
 }
