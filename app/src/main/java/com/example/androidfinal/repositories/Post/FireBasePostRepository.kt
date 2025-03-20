@@ -59,22 +59,20 @@ class FireBasePostRepository {
         }
 
         fireBase.db.collection(FireBaseModel.POSTS_COLLECTION_PATH)
-            .whereGreaterThanOrEqualTo(TIMESTAMP_KEY, startTimeLong)
-            .orderBy(TIMESTAMP_KEY, Query.Direction.DESCENDING)
-            .orderBy(RATING_KEY, Query.Direction.DESCENDING)
-            .limit(50)
             .get()
             .addOnSuccessListener { result ->
                 val posts = result.documents.mapNotNull { doc ->
-                    fromJSON(doc.data ?: emptyMap())
+                    val post = fromJSON(doc.data ?: emptyMap())
+                    if (post.timestamp >= startTimeLong) post else null
                 }
 
+                // Group posts by title
                 val trendingPosts = posts
                     .groupBy { it.title }
                     .map { (title, postList) ->
                         val postCount = postList.size
                         val avgRating = postList.map { it.rating }.average().toFloat()
-                        val photo = ""
+                        val photo = postList.firstOrNull()?.photo ?: "" // Get first image
 
                         TrendingPost(
                             title = title,
@@ -83,12 +81,12 @@ class FireBasePostRepository {
                             photo = photo
                         )
                     }
-                    .sortedByDescending { it.avgRating }
+                    .sortedByDescending { it.avgRating } // Sort by avg rating
 
                 callback(trendingPosts)
             }
             .addOnFailureListener {
-                callback(emptyList())
+                callback(emptyList()) // Return empty list on failure
             }
     }
 
