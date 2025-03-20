@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default App Theme -->
+    <style name="Theme.AniRate" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#ADD8E6</item>
+        <item name="colorPrimaryVariant">#87CEEB</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#FFCC00</item>
+    </style>
+
+    <!-- Custom RatingBar Theme -->
+    <style name="RatingBarTheme">
+        <item name="android:progressTint">@color/star_yellow</item>
+        <item name="android:secondaryProgressTint">@color/star_light_yellow</item>
+        <item name="android:backgroundTint">@color/star_grey</item>
+    </style>
+
+</resources>

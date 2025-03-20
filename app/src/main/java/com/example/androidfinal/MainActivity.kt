@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
             if (user != null && !user.photo.isNullOrEmpty()) {
-                profileImage.setImageURI(Uri.parse(user.photo))
+                profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             } else {
                 profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     fun updateProfileImage(imageUri: String?) {
         val profileImage = findViewById<ImageView>(R.id.profileImage)
         if (!imageUri.isNullOrEmpty()) {
-            profileImage.setImageURI(Uri.parse(imageUri))
+            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
         } else {
             profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
         }
