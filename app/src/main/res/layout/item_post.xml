@@ -89,10 +89,12 @@
             app:layout_constraintTop_toTopOf="@+id/buttonEditPost"
             app:srcCompat="@drawable/bin" />
 
+        <!-- Post Image (Smaller) -->
         <ImageView
             android:id="@+id/imageViewPhoto"
-            android:layout_width="92dp"
-            android:layout_height="84dp"
+            android:layout_width="70dp"
+            android:layout_height="64dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/buttonDeletePost"
             app:layout_constraintEnd_toStartOf="@+id/buttonDeletePost"
             app:layout_constraintStart_toEndOf="@+id/textViewTimeStamp"
