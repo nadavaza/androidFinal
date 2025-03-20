@@ -53,7 +53,7 @@ class UserDetailsFragment : Fragment() {
 
                 // Load user's profile picture
                 if (!currentUser.photo.isNullOrEmpty()) {
-                    userProfileImage.setImageURI(Uri.parse(currentUser.photo))
+                    userProfileImage.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
 
                 postsViewModel.getPostsByUser(currentUser.id)
@@ -146,7 +146,7 @@ class UserDetailsFragment : Fragment() {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
             try {
-                userProfileImage.setImageURI(selectedImageUri)
+                userProfileImage.setImageResource(android.R.drawable.ic_menu_gallery)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

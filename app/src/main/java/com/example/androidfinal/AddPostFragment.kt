@@ -106,7 +106,7 @@ class AddPostFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
-            imageViewPreview.setImageURI(selectedImageUri)
+            imageViewPreview.setImageResource(android.R.drawable.ic_menu_gallery)
             imageViewPreview.visibility = View.VISIBLE
         }
     }

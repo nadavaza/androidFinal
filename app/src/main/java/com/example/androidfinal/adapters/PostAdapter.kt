@@ -41,7 +41,13 @@ class PostAdapter(
         ) {
             // ✅ Display the correct username (fetch dynamically if needed)
             textViewUsername.text = user?.name ?: "Unknown User"
-            textViewEpisodeTitle.text = post.title
+
+            textViewEpisodeTitle.text = if (post.title.length > 20) {
+                "${post.title.substring(0, 20)}..."
+            } else {
+                post.title
+            }
+
             textViewReview.text = post.review
             textViewRating.text = "⭐ ${post.rating}/10"
             textViewTimeStamp.text = DateUtils.formatTimestamp(post.timestamp)
@@ -52,7 +58,7 @@ class PostAdapter(
 
                 try {
                     // ✅ Try setting image directly (works for local images)
-                    imageViewPhoto.setImageURI(imageUri)
+                    imageViewPhoto.setImageResource(android.R.drawable.ic_menu_gallery)
                 } catch (e: Exception) {
                     imageViewPhoto.setImageResource(R.drawable.noanime)
                 }

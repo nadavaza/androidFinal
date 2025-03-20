@@ -91,7 +91,7 @@ class SignUpFragment : Fragment() {
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                 selectedImageUri = result.data!!.data
                 val profileImageView = view?.findViewById<ImageView>(R.id.profileImageView)
-                profileImageView?.setImageURI(selectedImageUri)
+                profileImageView?.setImageResource(android.R.drawable.ic_menu_gallery)
                 profileImageView?.visibility = View.VISIBLE
             }
         }
