@@ -58,7 +58,7 @@ class UserDetailsFragment : Fragment() {
 
                 postsViewModel.getPostsByUser(currentUser.id)
                 postsViewModel.posts.observe(viewLifecycleOwner) { posts ->
-                    postAdapter = PostAdapter(posts, usersViewModel, {}, {}, usersViewModel.currentUser.value, false, viewLifecycleOwner)
+                    postAdapter = PostAdapter(posts, usersViewModel, { post -> openEditPostDialog(post) }, { post -> onDeletePost(post) }, usersViewModel.currentUser.value, true, viewLifecycleOwner)
                     recyclerViewUserPosts.adapter = postAdapter
                 }
             }
