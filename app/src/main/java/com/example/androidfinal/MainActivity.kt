@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        // ✅ Observe currentUser and update profile picture accordingly
         usersViewModel.currentUser.observe(this) { user ->
             if (user != null && !user.photo.isNullOrEmpty()) {
                 Picasso.get()
@@ -85,19 +83,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_trending -> navController.navigate(R.id.nav_trending)
             }
             true
-        }
-    }
-
-    /**
-     * Updates the profile image in the toolbar.
-     * This method is called from `UserDetailsFragment` when the user updates their profile picture.
-     */
-    fun updateProfileImage(imageUri: String?) {
-        val profileImage = findViewById<ImageView>(R.id.profileImage)
-        if (!imageUri.isNullOrEmpty()) {
-            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
-        } else {
-            profileImage.setImageResource(android.R.drawable.ic_menu_gallery)
         }
     }
 }

@@ -58,12 +58,12 @@ class UsersViewModel(application: Application) : AndroidViewModel(application) {
         return userLiveData
     }
 
-    fun updateUser(updatedUser: User) {
+    fun updateUser(updatedUser: User, photo: Bitmap?) {
         val current = _currentUser.value
         if (current != null) {
-            usersDomain.updateUser(current.id, updatedUser) { isUpdated ->
+            usersDomain.updateUser(current.id, updatedUser, photo) { isUpdated ->
                 if (isUpdated) {
-                    _currentUser.postValue(updatedUser)
+                    getUser()
                 }
             }
         }
