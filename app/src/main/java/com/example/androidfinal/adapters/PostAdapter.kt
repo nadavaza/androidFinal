@@ -42,8 +42,8 @@ class PostAdapter(
             // ✅ Display the correct username (fetch dynamically if needed)
             textViewUsername.text = user?.name ?: "Unknown User"
 
-            textViewEpisodeTitle.text = if (post.title.length > 24) {
-                "${post.title.substring(0, 24)}..."
+            textViewEpisodeTitle.text = if (post.title.length > 25) {
+                "${post.title.substring(0, 25)}..."
             } else {
                 post.title
             }
