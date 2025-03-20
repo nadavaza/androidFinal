@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import com.example.androidfinal.base.MyApplication
 import com.example.androidfinal.entities.User.Companion.ID_KEY
 import com.google.firebase.firestore.FieldValue
-import java.util.UUID
 
 @Entity(tableName = "posts")
 data class Post(
@@ -27,7 +26,7 @@ data class Post(
         const val REVIEW_KEY = "review"
         const val RATING_KEY = "rating"
         const val PHOTO_KEY = "photo"
-        const val TIMESTEMP_KEY = "timestamp"
+        const val TIMESTAMP_KEY = "timestamp"
         const val LAST_UPDATED = "lastUpdated"
         private const val GET_LAST_UPDATED = "get_last_updated"
 
@@ -51,7 +50,7 @@ data class Post(
             val review = json[REVIEW_KEY] as? String ?: ""
             val rating = (json[RATING_KEY] as? Number)?.toInt() ?: 0
             val photo = json[PHOTO_KEY] as? String ?: ""
-            val timestamp = when (val ts = json[TIMESTEMP_KEY]) {
+            val timestamp = when (val ts = json[TIMESTAMP_KEY]) {
                 is Map<*, *> -> (ts["seconds"] as? Long)?.times(1000) ?: System.currentTimeMillis()
                 is Long -> ts
                 is Double -> ts.toLong()

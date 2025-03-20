@@ -12,6 +12,7 @@ import com.example.androidfinal.repositories.Post.FireBasePostRepository
 import com.example.androidfinal.repositories.Post.LocalPostRepository
 //import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,14 +28,10 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
     private val _trendingPosts = MutableLiveData<List<TrendingPost>>()
     val trendingPosts: LiveData<List<TrendingPost>> get() = _trendingPosts
 
-
-    init {
-        getAllPosts()
-    }
-
     fun getAllPosts() {
         viewModelScope.launch {
             postDomain.getAllPosts(Post.lastUpdated) { postList ->
+                Post.lastUpdated = Instant.now().epochSecond
                 _posts.postValue(postList)
             }
         }
@@ -42,7 +39,9 @@ class PostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
-            postDomain.getPostsByUser(userId) { posts -> _posts.postValue(posts) }
+            postDomain.getPostsByUser(userId) { posts ->
+                _posts.postValue(posts)
+            }
         }
     }
 
