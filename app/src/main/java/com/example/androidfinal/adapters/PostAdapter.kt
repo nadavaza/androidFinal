@@ -75,7 +75,6 @@ class PostAdapter(
                 buttonDeletePost.visibility = View.GONE
             }
 
-            // ✅ Set listeners for edit & delete buttons
             buttonEditPost.setOnClickListener { onEditClick(post) }
             buttonDeletePost.setOnClickListener { onDeleteClick(post) }
         }
