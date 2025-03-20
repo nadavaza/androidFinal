@@ -48,8 +48,6 @@ class SignInFragment : Fragment() {
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signIn_to_home)
-                    } else {
-                        Toast.makeText(requireContext(), "Login failed!", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {

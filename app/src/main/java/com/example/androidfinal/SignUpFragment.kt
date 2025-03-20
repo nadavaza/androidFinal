@@ -75,9 +75,6 @@ class SignUpFragment : Fragment() {
                 usersViewModel.currentUser.observe(viewLifecycleOwner) { currentUser ->
                     if (currentUser != null) {
                         findNavController().navigate(R.id.action_signUp_to_home)
-                    } else {
-                        Toast.makeText(requireContext(), "Sign Up failed!", Toast.LENGTH_SHORT)
-                            .show()
                     }
                 }
             } else {
