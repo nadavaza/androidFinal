@@ -161,9 +161,9 @@ class UserDetailsFragment : Fragment() {
                     rating = ratingBar.rating.toInt()
                 )
                 var selectedBitmap: Bitmap? = null
-                userProfileImage.isDrawingCacheEnabled = true
-                userProfileImage.buildDrawingCache()
-                selectedBitmap = (userProfileImage.drawable as? BitmapDrawable)?.bitmap
+                postPhoto.isDrawingCacheEnabled = true
+                postPhoto.buildDrawingCache()
+                selectedBitmap = (postPhoto.drawable as? BitmapDrawable)?.bitmap
                 postsViewModel.updatePost(updatedPost, selectedBitmap)
                 Toast.makeText(requireContext(), "Post updated!", Toast.LENGTH_SHORT).show()
             }
